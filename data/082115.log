@@ -1,0 +1,15 @@
+08/21/15 13:45:40 | Mon - vmware poc all day
+08/21/15 13:45:47 | Tue - vmware poc all day
+08/21/15 13:46:59 | started production vcloud build
+08/21/15 13:47:48 | CRQ000000078055 - vRealize Automation
+08/21/15 13:48:05 | CRQ000000078057 - VMware Identity
+08/21/15 13:48:34 | CRQ000000077968 - plvcbiospam1 Barracuda Appliance
+08/21/15 13:49:12 | began vCloud documentation and run book
+08/21/15 13:49:28 | 10PM - reponded to WWW node outage
+08/21/15 13:49:51 | fixed user harrisc2 on plvcbiocmo2
+08/21/15 13:50:22 | INC000002007145 - added user kandothc to plvcbiocmo2
+08/21/15 13:50:44 | puppet - added support for RHEL5 users and passwords
+08/21/15 13:51:12 |  cleaned up yum cache on plpharm1
+08/21/15 13:51:34 | fixed NIC bonding on plcrdba2
+08/21/15 13:51:56 | requested VMs from windows group for vCloud prod
+08/21/15 13:52:15 | added support for prod network VLAN to vCloud

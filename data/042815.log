@@ -1,0 +1,13 @@
+04/28/15 14:22:34 | firewall request for creighton
+04/28/15 14:22:40 | setup ssl certificates for quizzicle
+04/28/15 14:22:49 | reopened case with vmware for tlvewss1 failure
+04/28/15 14:22:59 | fixed tlvewss1 after read-lock failure this morning
+04/28/15 14:23:19 | looked into nfs permissions issue for Joe -- believe it requires setup on storage side for a userid
+04/28/15 14:23:43 | setup data mount for chris paquette and diagnosed issue with him being unable to connect to his web console
+04/28/15 14:23:57 | logged case with IBM for failed DIMM in plclai1
+04/28/15 14:24:07 | replaced failed DIMM in plclai1 and sent bad one back to IBM
+04/28/15 14:24:44 | working with VMware to diagnose vmware orchestrator problem
+04/28/15 15:33:09 | prepared voalte servers for transit to main campus
+04/28/15 16:03:26 | puppet change for WWW
+04/28/15 16:03:42 | diagnosed issue with www.mskcc.org not responding -- phase 2 did not setup symlink properly
+04/28/15 16:18:00 | reconciled san devices to datstores on each host

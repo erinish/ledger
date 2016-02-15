@@ -1,0 +1,4 @@
+03/09/15 10:40:05 | SYSLOG - upgraded ram in both boxes from 32 to 64
+03/09/15 10:40:44 | SYSLOG - resized disk to allow for some management VMs to move over (vCenter, vCOps)
+03/09/15 15:12:47 | vCenter moved to syslog1 local storage
+03/09/15 16:40:54 | QUIZZICLE - Vendor VPN access and new temp password for vendor (original lost)

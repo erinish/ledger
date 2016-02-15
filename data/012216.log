@@ -1,0 +1,7 @@
+01/22/16 08:46:50 | working on reported DoS attack sourcing from MSKCC /16
+01/22/16 09:15:02 | INC000002164148 - create account on tlvemsbpcl1/2 for vendor
+01/22/16 09:23:51 | followed up with Tony Liu on his ticket that does not have enough information
+01/22/16 12:33:07 | produced pci rpm report
+01/22/16 12:33:20 | scheduled vm hardware upgrade for plvqzcldb1 monday @ 7am
+01/22/16 13:32:03 | configured idrac for plsurgery1 and submitted dns request for same
+01/22/16 14:12:08 | assisting michael czumak investigating DoS originating from pledga01

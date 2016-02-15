@@ -3,3 +3,4 @@
 03/04/15 10:23:34 | GENERAL - intermittant network issues
 03/04/15 11:12:57 | GENERAL - networking issues caused by BGP peering issue
 03/04/15 12:08:37 | ACMAN - wrote simple monitoring script to double-check alerts from openview regarding heartbeat
+03/04/15 14:15:04 | VMWARE - created udp client/server to monitor for lost network traffic on vcenter

@@ -1,0 +1,9 @@
+03/19/15 09:13:48 | PLVQZCLw1 - created shared web roots
+03/19/15 09:14:36 | PLEDGA01 - OS Install completed
+03/19/15 09:14:42 | PLEDGA01 - Patching completed
+03/19/15 09:14:55 | PLEDGA01 - network bonding setup
+03/19/15 09:15:15 | PLEDGA01 - software install completed
+03/19/15 09:15:30 | PLEDGA01 - server turned over to customer, backups and monitoring pending
+03/19/15 14:08:47 | VMWare Test Cluster moved all VMs to new storage
+03/19/15 14:09:05 | VMWare Test Cluster removed old datastores and datastore cluster
+03/19/15 14:09:18 | VMWare Test Cluster detached old LUNs and turned over to storage for cleanup
