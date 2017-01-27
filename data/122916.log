@@ -1,0 +1,6 @@
+12/29/16 14:27:55 | cerner - ilo configuration for test servers
+12/29/16 14:28:06 | cerner - prod storage layout given to enterprise storage group
+12/29/16 14:29:00 | cerner - test server network cables connected and link verified
+12/29/16 14:30:06 | cerner - builds started for prod VMs - plvlabmillcon1, plvlabmillcondb1, plvmillibus1, plvmillibus2
+12/29/16 14:30:54 | cerner - builds started for test physical servers - tllabmillapp1,2 tllabmilldb1,2 tllabdtview1
+12/29/16 14:31:38 | edg - builds started for test splunk servers - tlvegdsplkdmc1, tlvedgsplks1,2,3

@@ -1,0 +1,4 @@
+05/27/16 10:51:00 | started decommission process for tlvelmw1 tlvelmd1
+05/27/16 11:10:24 | reviewed release notes for ESXi 6.0U2
+05/27/16 13:07:15 | removed tlarcs1 from puppet
+05/27/16 13:17:22 | cleaned up stale certificates in puppet

@@ -1,0 +1,4 @@
+02/26/16 12:41:35 | troubleshooting for WWW database
+02/26/16 12:41:47 | opened case for WWW database -- suspect bug on alter table statements
+02/26/16 12:42:04 | installed pledga02, plrtapps1-3
+02/26/16 12:42:16 | configured pledga02, plmongo1-3, plrtapps1-3

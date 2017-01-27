@@ -1,0 +1,4 @@
+03/30/16 10:59:02 | rebuilt tlvelk on new versions of elasticsearch, logstash, and kibana
+03/30/16 11:19:09 | cleaned up puppet reports
+03/30/16 11:19:25 | dns request for tlvelk
+03/30/16 14:14:02 | wrote script to test SSL/TLS protocols

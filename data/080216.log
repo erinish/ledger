@@ -1,0 +1,3 @@
+08/02/16 12:15:38 | started testing saslauthd for MongoDB -> AD authentication (Ta-ching Chien)
+08/02/16 12:16:06 | configured network teaming/lacp for splunk servers
+08/02/16 12:16:24 | provided WWNs to storage for splunk

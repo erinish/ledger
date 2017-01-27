@@ -1,0 +1,3 @@
+03/21/16 08:37:09 | saturday morning - production cluster lost storage, opened vmware case and brought ~60 vms back online.
+03/21/16 11:43:25 | fixing VMs that have read-only filesystems after disk issues
+03/21/16 15:23:22 | uploaded logs to vmware, followed up on case from the weekend

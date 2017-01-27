@@ -1,5 +1,9 @@
-01/12/16 14:36:17 | Drupal log rotation for production WWW
-01/29/16 09:35:50 | Enccompass testing
-02/12/16 08:50:19 | puppet - packages module
-02/12/16 08:50:28 |  vmdeploy - network creation
-02/12/16 08:50:36 | vmdeploy - storage vmotion
+12/29/16 10:25:34 | Send notification for PLMPH01 migration to Ubuntu to all current users
+12/29/16 10:28:10 | Fill out SAN portion of Cerner Excel Doc
+12/29/16 10:28:19 | Fill out Network portion of Cerner Excel Doc
+01/03/17 15:05:17 | open.mskcc.org for all cerner servers
+01/03/17 15:05:24 | dradocs for all cerner servers
+01/03/17 15:05:32 | check all remedy entries for cerner hardware
+01/09/17 09:34:26 | runbook for cerner servers
+01/25/17 08:53:11 | monitoring, backup, and remedy tasks for production cerner servers
+01/25/17 08:53:22 | storage and networking for cerner test servers

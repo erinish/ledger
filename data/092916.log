@@ -1,0 +1,3 @@
+09/29/16 14:34:52 | integrated Ubuntu preseed builder into tlvaegis1 - almost at feature parity with RHEL builders
+09/29/16 14:42:24 | meeting with vendor to discuss deployment options for VM request from Charles Azar -- followup meeting required
+09/29/16 14:51:30 | fixed minor issue on www test enviornment with gluster disk mounts -- no significant impacts
