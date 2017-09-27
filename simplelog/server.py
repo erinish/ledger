@@ -1,13 +1,15 @@
+#!/usr/bin/env python3
 """
 server.py
 """
-from flask import Flask, response, jsonify
+from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 
 app = Flask('simplelog')
 api = Api(app)
 
 testdata = {'test': 'salright'}
+
 
 class Test(Resource):
 
