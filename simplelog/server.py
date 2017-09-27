@@ -20,8 +20,10 @@ class Task(Resource):
 
     def taskid_exists(f):
         def wrapper(*args, **kwargs):
+            print(args)
             if args[1] not in tasks:
                 return jsonify({args[1]: 'not found'}), 404
+            f()
         return wrapper
 
     @taskid_exists
