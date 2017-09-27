@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-server.py
+rest server for simplelog
 """
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
