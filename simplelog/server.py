@@ -16,11 +16,13 @@ class Tasks(Resource):
     def get(self):
         return jsonify(tasks)
 
+
 class Task(Resource):
 
     def taskid_exists(f):
         def wrapper(*args, **kwargs):
             print(args)
+            print(kwargs)
             if args[1] not in tasks:
                 return jsonify({args[1]: 'not found'}), 404
             f()
