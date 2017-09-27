@@ -21,12 +21,12 @@ class Task(Resource):
 
     def get(self, taskid):
         if taskid not in tasks:
-            return jsonify('not found'), 404
+            return jsonify({taskid: 'not found'}) 404
         return jsonify(tasks[taskid])
 
     def delete(self, taskid):
         tasks.pop(taskid)
-        return jsonify({taskid: 'deleted successfully'}), 204
+        return jsonify({taskid: 'deleted successfully'}) 204
 
 
 api.add_resource(Tasks, '/task')
