@@ -21,7 +21,7 @@ class Task(Resource):
 
     def get(self, taskid):
         if taskid not in tasks:
-            return jsonify({taskid: 'not found'}), 404
+            return jsonify('not found'), 404
         return jsonify(tasks[taskid])
 
     def delete(self, taskid):
