@@ -1,0 +1,2 @@
+04/07/17 13:16:55 | increased ulimits for edg splunk servers
+04/07/17 15:32:50 | disabled transparent hugepages for splunk indexers

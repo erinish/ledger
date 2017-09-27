@@ -1,0 +1,4 @@
+03/02/17 08:40:24 | working on truing up all server information across various data sources (puppet, vmware, aegis, backups, etc)
+03/02/17 08:44:25 | www test server patching
+03/02/17 08:49:19 | working on disk encryption for hp linux servers (cerner) with luybo/mike
+03/02/17 09:09:21 | dr cerner server build in progress

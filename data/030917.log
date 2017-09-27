@@ -1,0 +1,5 @@
+03/09/17 09:44:23 | working on new ssl proxy solution
+03/09/17 09:44:48 | moved plvebrav1 off lyn cluster to open sys and removed memory limits to fix nightly issue
+03/09/17 16:06:24 | cerner access for vbaileyp to plvlabmillcon1 plvlabmillcondb1
+03/09/17 16:07:19 | dmz patching - group b
+03/09/17 16:07:30 | cerner -- setup ilo for DR servers

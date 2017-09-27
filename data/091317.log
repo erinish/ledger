@@ -1,0 +1,5 @@
+09/13/17 15:31:52 | cerner users added to DR environment for Pete
+09/13/17 15:32:24 | troubleshooting tomcat ciphers not being respected by tomcat for Arcot w/Shane
+09/13/17 15:32:40 | mounted NFS shares on tlvdmg1-5,pledga01
+09/13/17 15:37:11 | recovered plmph01 from a system freeze
+09/13/17 15:38:38 | preliminary planning to move GeneCompressor(python web app - Zarina Fnu) into production
