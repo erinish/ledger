@@ -31,7 +31,7 @@ class Task(Resource):
     @taskid_exists
     def delete(self, taskid):
         tasks.pop(taskid)
-        return jsonify{taskid: 'deleted successfully'}, 204
+        return jsonify({taskid: 'deleted successfully'}), 204
 
 
 api.add_resource(Tasks, '/task')
