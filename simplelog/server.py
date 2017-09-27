@@ -13,7 +13,7 @@ testdata = {'test': 'salright'}
 
 class Test(Resource):
 
-    def get():
+    def get(self):
         return jsonify(testdata)
 
 api.add_resource(Test, '/')
