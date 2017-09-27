@@ -11,6 +11,8 @@ setup(
         'Arrow',
         'requests',
         'click-shell',
+        'flask',
+        'flask_restful'
     ],
     entry_points='''
         [console_scripts]
