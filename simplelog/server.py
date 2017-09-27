@@ -19,20 +19,11 @@ class Tasks(Resource):
 
 class Task(Resource):
 
-    def taskid_exists(f):
-        def wrapper(*args, **kwargs):
-            print(args)
-            print(kwargs)
-            if kwargs['taskid'] not in tasks:
-                return jsonify({kwargs['taskid']: 'not found'}), 404
-            f(*args, **kwargs)
-        return wrapper
-
-    @taskid_exists
     def get(self, taskid):
+        if taskid not in tasks:
+            return jsonify({taskid: 'not found'}), 404
         return jsonify(tasks[taskid])
 
-    @taskid_exists
     def delete(self, taskid):
         tasks.pop(taskid)
         return jsonify({taskid: 'deleted successfully'}), 204
