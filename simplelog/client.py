@@ -6,16 +6,21 @@ Quick task logging
 import click
 import arrow
 import os
+import requests as req
+import hashlib
 from sys import exit
 from subprocess import call
 
 CURDIR = os.path.dirname(os.path.abspath(__file__))
 LOGFILE = '%s.log' % (os.path.join(CURDIR, "data", arrow.now().format('MMDDYY')))
 TASKFILE = '%s/tasks.log' % (os.path.join(CURDIR, "data"))
+API = 'http://tlvericu16.mskcc.org:9000'
+
 
 @click.group()
 def cli():
     pass
+
 
 def dated_to_file(msg, filepath):
     logstring = "%s | %s\n" % (
@@ -24,9 +29,23 @@ def dated_to_file(msg, filepath):
     print(logstring)
     with open(filepath, 'a') as f:
         f.write(logstring)
-    
 
-@click.command()
+
+@cli.command()
+@click.argument('msg', nargs=-1)
+def tasks(msg):
+    if not msg:
+        print(req.get("{}/task".format(API)).json())
+    else:
+        msg = " ".join(msg)
+        stamp = arrow.now().timestamp
+        digest = hashlib.sha256(msg.encode()).hexdigest()
+        req.put("{}/task/{}".format(API, digest), data={'task': msg,
+                                                        'time': stamp
+                                                        }).json()
+
+
+@cli.command()
 @click.argument('msg', nargs=-1)
 def log(msg):
     """add a timestamped log entry"""
@@ -42,7 +61,7 @@ def log(msg):
 
 
 
-@click.command()
+@cli.command()
 @click.argument('msg', nargs=-1)
 def todo(msg):
     """add a timestamped task"""
@@ -53,6 +72,7 @@ def todo(msg):
     else:
         dated_to_file(msg, TASKFILE)
 
+
 def print_report(filename):
     with open(filename, 'r') as f:
         firstline = f.readline()
@@ -62,12 +82,14 @@ def print_report(filename):
         for line in f:
             print("\u2022 %s" % (line[20:]), end='')
 
+
 def print_email_report(filename):
     with open(filename, 'r') as f:
         for line in f:
             print("\u2022 %s" % (line[20:]), end='')
 
-@click.command()
+
+@cli.command()
 @click.option('--filename', required=False)
 @click.option('--dated/--no-dated', required=False)
 @click.argument('count', nargs=1, required=False, type=click.INT)
@@ -96,7 +118,7 @@ def report(filename, dated, count):
                 print_email_report(filename)
 
 
-@click.command()
+@cli.command()
 @click.argument('subcommand', nargs=1, required=False)
 def edit(subcommand):
     """open log or tasklist in editor"""
@@ -109,10 +131,6 @@ def edit(subcommand):
         print("Unknown subcommand: %s" % subcommand)
         exit(1)
 
-cli.add_command(log)
-cli.add_command(report)
-cli.add_command(edit)
-cli.add_command(todo)
 
 if __name__ == '__main__':
     cli()
