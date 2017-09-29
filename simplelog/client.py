@@ -5,6 +5,7 @@ Quick task logging
 """
 import click
 import arrow
+import re
 import os
 import requests as req
 import hashlib
@@ -32,17 +33,46 @@ def dated_to_file(msg, filepath):
 
 
 @cli.command()
+@click.argument('sub', type=click.STRING)
 @click.argument('msg', nargs=-1)
-def tasks(msg):
-    if not msg:
-        print(req.get("{}/task".format(API)).json())
-    else:
+@click.option('-l','--long', required=False, is_flag=True)
+def tasks(sub, msg, long):
+    mytasks = req.get("{}/task".format(API)).json()
+    if sub == 'list':
+        print("ID       TIME       STATUS TASK")
+        for k, v in mytasks.items():
+            if long:
+                digest = k
+            else:
+                digest = k[:6] + ".."
+            print("{} {} {} {}".format(digest,
+                                       v['time'],
+                                       v['status'].ljust(6),
+                                       v['task']))
+
+    elif sub == 'add':
         msg = " ".join(msg)
         stamp = arrow.now().timestamp
         digest = hashlib.sha256(msg.encode()).hexdigest()
         req.put("{}/task/{}".format(API, digest), data={'task': msg,
-                                                        'time': stamp
+                                                        'time': stamp,
+                                                        'status': 'open'
                                                         }).json()
+    elif sub == 'del':
+        check = []
+        for k in mytasks:
+            fuzz = re.match(msg[0], k)
+            if fuzz:
+                check.append(k)
+        if len(check) > 1:
+            print('error: hash matched multiple tasks. provide more characters')
+            raise SystemExit(1)
+        elif len(check) == 0:
+            print('error: no tasks match that hash')
+        else:
+            req.delete("{}/task/{}".format(API, check[0]))
+
+
 
 
 @cli.command()
