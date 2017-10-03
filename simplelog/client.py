@@ -39,25 +39,24 @@ def dated_to_file(msg, filepath):
 def tasks(sub, msg, long):
     mytasks = req.get("{}/task".format(API)).json()
     if sub == 'list':
-        print("ID       TIME       STATUS TASK")
+        print("ID       TIME           STATUS TASK")
         for k, v in mytasks.items():
             if long:
                 digest = k
             else:
                 digest = k[:6] + ".."
             print("{} {} {} {}".format(digest,
-                                       v['time'],
+                                       arrow.get(v['time']).format('MM/DD/YY HH:mm'),
                                        v['status'].ljust(6),
                                        v['task']))
 
     elif sub == 'add':
         msg = " ".join(msg)
         stamp = arrow.now().timestamp
-        digest = hashlib.sha256(msg.encode()).hexdigest()
-        req.put("{}/task/{}".format(API, digest), data={'task': msg,
-                                                        'time': stamp,
-                                                        'status': 'open'
-                                                        }).json()
+        req.put("{}/task".format(API), data={'task': msg,
+                                             'time': stamp,
+                                             'status': 'open'
+                                             }).json()
     elif sub == 'del':
         check = []
         for k in mytasks:

@@ -4,6 +4,7 @@ rest server for simplelog
 """
 import os
 import json
+import hashlib
 from pathlib import Path
 from flask import Flask, request
 from flask_restful import Resource, Api
@@ -26,6 +27,24 @@ class Tasks(Resource):
 
     def get(self):
         return tasks
+
+    
+    def put(self):
+        stamp = request.form['time']
+        msg = request.form['task']
+        digest = str(stamp) + msg
+        taskid = hashlib.sha256(digest.encode()).hexdigest()
+        if taskid not in tasks:
+            tasks[taskid] = {}
+        else:
+            return 401
+        for k, v in request.form.items():
+            tasks[taskid][k] = v
+        tasks[taskid]['uri'] = "/task/{}".format(taskid)
+        with open(TASKFILE, 'w') as f:
+            json.dump(tasks, f)
+        return tasks[taskid], 201
+
 
 
 class TaskHandler(Resource):
