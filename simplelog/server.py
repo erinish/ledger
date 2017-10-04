@@ -7,7 +7,7 @@ import json
 import hashlib
 from pathlib import Path
 from flask import Flask, request
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, fields, marshal_with
 
 MYDIR = os.path.dirname(os.path.abspath(__file__))
 TASKFILE = os.path.join(MYDIR, 'data', 'tasks.json')
@@ -15,59 +15,70 @@ TASKFILE = os.path.join(MYDIR, 'data', 'tasks.json')
 app = Flask('simplelog')
 api = Api(app)
 
+TASKFIELDS = {'task': fields.String,
+              'uri': fields.String,
+              'time': fields.Integer,
+              'status': fields.String 
+              } 
+
 if not Path(TASKFILE).is_file():
     with open(TASKFILE, 'w') as f:
         json.dump({}, f)
 
 with open(TASKFILE, 'r') as f:
-    tasks = json.load(f)
+    TASKDATA = json.load(f)
 
 
 class Tasks(Resource):
-
+    """Add new TASKDATA and list all"""
     def get(self):
-        return tasks
+        """handle get request for all tasks"""
+        return TASKDATA
 
-    
+    @marshal_with(TASKFIELDS)
     def put(self):
+        """handle put request for new tasks"""
         stamp = request.form['time']
         msg = request.form['task']
         digest = str(stamp) + msg
         taskid = hashlib.sha256(digest.encode()).hexdigest()
-        if taskid not in tasks:
-            tasks[taskid] = {}
+        if taskid not in TASKDATA:
+            TASKDATA[taskid] = {}
         else:
             return 401
         for k, v in request.form.items():
-            tasks[taskid][k] = v
-        tasks[taskid]['uri'] = "/task/{}".format(taskid)
+            TASKDATA[taskid][k] = v
+        TASKDATA[taskid]['uri'] = "/task/{}".format(taskid)
         with open(TASKFILE, 'w') as f:
-            json.dump(tasks, f)
-        return tasks[taskid], 201
+            json.dump(TASKDATA, f)
+        return TASKDATA[taskid], 201
 
 
 
 class TaskHandler(Resource):
-
+    """Work with specific TASKDATA"""
     def get(self, taskid):
-        if taskid not in tasks:
+        """retrieve a specific task"""
+        if taskid not in TASKDATA:
             return {taskid: 'not found'}, 404
-        return tasks[taskid]
+        return TASKDATA[taskid]
 
     def delete(self, taskid):
-        deleted = tasks.pop(taskid)
+        """delete the specified task"""
+        deleted = TASKDATA.pop(taskid)
         with open(TASKFILE, 'w') as f:
-            json.dump(tasks, f)
+            json.dump(TASKDATA, f)
         return deleted
 
     def put(self, taskid):
-        if taskid not in tasks:
-            tasks[taskid] = {}
+        """update the specified task"""
+        if taskid not in TASKDATA:
+            TASKDATA[taskid] = {}
         for k, v in request.form.items():
-            tasks[taskid][k] = v
+            TASKDATA[taskid][k] = v
         with open(TASKFILE, 'w') as f:
-            json.dump(tasks, f)
-        return tasks[taskid], 201
+            json.dump(TASKDATA, f)
+        return TASKDATA[taskid], 201
 
 api.add_resource(Tasks, '/task')
 api.add_resource(TaskHandler, '/task/<string:taskid>')

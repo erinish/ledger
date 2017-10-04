@@ -16,6 +16,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        aegiscli=aegiscli.main:cli
+        simplelog=simplelog.client:cli
     ''',
 )
