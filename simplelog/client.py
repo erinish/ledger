@@ -3,116 +3,75 @@
 
 Quick task logging
 """
+import re
+import requests as req
 import click
 import arrow
-import os
-from sys import exit
-from subprocess import call
+from simplelog.utils import check_id, filter_tasks
 
-CURDIR = os.path.dirname(os.path.abspath(__file__))
-LOGFILE = '%s.log' % (os.path.join(CURDIR, "data", arrow.now().format('MMDDYY')))
-TASKFILE = '%s/tasks.log' % (os.path.join(CURDIR, "data"))
+API = 'http://tlvericu16.mskcc.org:9000'
+
 
 @click.group()
 def cli():
     pass
 
-def dated_to_file(msg, filepath):
-    logstring = "%s | %s\n" % (
-        arrow.now().format('MM/DD/YY HH:mm:ss'),
-        ' '.join([str(x) for x in msg]))
-    print(logstring)
-    with open(filepath, 'a') as f:
-        f.write(logstring)
-    
-
-@click.command()
-@click.argument('msg', nargs=-1)
-def log(msg):
-    """add a timestamped log entry"""
-    if not msg:
-        try:
-            with open(LOGFILE, 'r') as f:
-                for line in f:
-                    print(line)
-        except FileNotFoundError:
-            print('No logs for today.')
-    else:
-        dated_to_file(msg, LOGFILE)
-
-
-
-@click.command()
-@click.argument('msg', nargs=-1)
-def todo(msg):
-    """add a timestamped task"""
-    if not msg:
-        with open(TASKFILE, 'r') as f:
-            for line in f:
-                print(line)
-    else:
-        dated_to_file(msg, TASKFILE)
-
-def print_report(filename):
-    with open(filename, 'r') as f:
-        firstline = f.readline()
-        print(firstline[0:8])
-        print('--------')
-        print("\u2022 %s" % (firstline[20:]), end='')
-        for line in f:
-            print("\u2022 %s" % (line[20:]), end='')
-
-def print_email_report(filename):
-    with open(filename, 'r') as f:
-        for line in f:
-            print("\u2022 %s" % (line[20:]), end='')
-
-@click.command()
-@click.option('--filename', required=False)
-@click.option('--dated/--no-dated', required=False)
-@click.argument('count', nargs=1, required=False, type=click.INT)
-def report(filename, dated, count):
-    """produce email-friendly report"""
-    if count:
-        for i in reversed(range(count)):
-            curlog = '%s.log' % (os.path.join(CURDIR, 'data', arrow.now().replace(days=-i).format('MMDDYY')))
-            try:
-                if dated:
-                    print_report(curlog)
-                else:
-                    print_email_report(curlog)
-            except (FileNotFoundError,):
-                pass
-    else:
-        if not filename:
-            if dated:
-                print_report(LOGFILE)
+@cli.command(name='list')
+@click.option('-l', '--long', required=False, is_flag=True)
+@click.option('-d', '--days', help="number of days before now")
+@click.option('-s', '--status')
+def list_task(long, days, status):
+    filterkwargs = {}
+    if days:
+        filterkwargs['days'] = arrow.now().timestamp - (int(days) * 86400)
+    if status:
+        filterkwargs['status'] = status
+    mytasks = req.get("{}/task".format(API)).json()
+    tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'])
+    print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
+    for entry in tasksbytime:
+        if filter_tasks(entry[1], **filterkwargs):
+            if long:
+                digest = entry[0] 
             else:
-                print_email_report(LOGFILE)
-        else:
-            if dated:
-                print_report(filename)
-            else:
-                print_email_report(filename)
+                digest = entry[0][:6] + ".."
+            humantime = arrow.get(entry[1]['time']).to('local').format('MM/DD/YY HH:mm')
+            print("{:>8} {:<14} {:>6} {}".format(digest,
+                                                 humantime,
+                                                 entry[1]['status'],
+                                                 entry[1]['task']))
+
+@cli.command(name='add')
+@click.argument('msg', nargs=-1)
+@click.option('-s', '--status', type=click.STRING)
+def add_task(msg, status='open'):
+    msg = " ".join(msg)
+    stamp = arrow.now().timestamp
+    r = req.put("{}/task".format(API), data={'task': msg,
+                                             'time': stamp,
+                                             'status': status
+                                             })
+    print(r.text)
+
+@cli.command(name='del')
+@click.argument('msg', type=click.STRING)
+def del_task(msg):
+    uri = check_id(API, msg)
+    if uri:
+        r = req.delete("{}/task/{}".format(API, uri))
+        print(r.text)
+
+@cli.command(name='close')
+@click.argument('tsk')
+@click.argument('msg', nargs=-1)
+def close_task(tsk, msg):
+    """close a task with an optional comment"""
+    uri = check_id(API, tsk)
+    if uri:
+        r = req.put("{}/task/{}".format(API,uri), data={'status': 'closed'})
+        print(r.text)
 
 
-@click.command()
-@click.argument('subcommand', nargs=1, required=False)
-def edit(subcommand):
-    """open log or tasklist in editor"""
-    enveditor = os.environ.get('enveditor', 'vim')  # vim default
-    if not subcommand or subcommand == 'log':
-        call([enveditor, LOGFILE])
-    elif subcommand == 'todo':
-        call([enveditor, TASKFILE])
-    else:
-        print("Unknown subcommand: %s" % subcommand)
-        exit(1)
-
-cli.add_command(log)
-cli.add_command(report)
-cli.add_command(edit)
-cli.add_command(todo)
 
 if __name__ == '__main__':
     cli()
