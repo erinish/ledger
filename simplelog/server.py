@@ -4,9 +4,11 @@ rest server for simplelog
 """
 import os
 import json
+import copy
 import hashlib
+import arrow
 from pathlib import Path
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_restful import Resource, Api, fields, marshal_with
 
 MYDIR = os.path.dirname(os.path.abspath(__file__))
@@ -83,5 +85,12 @@ class TaskHandler(Resource):
 api.add_resource(Tasks, '/task')
 api.add_resource(TaskHandler, '/task/<string:taskid>')
 
+
+@app.route('/')
+def main():
+    tasksbytime = copy.deepcopy(sorted(TASKDATA.items(), key=lambda x: x[1]['time'], reverse=True))
+    for task in tasksbytime:
+        task[1]['time'] = arrow.get(task[1]['time']).to('local').format('MM/DD/YY HH:mm')
+    return render_template('index.html', tasks=tasksbytime)
 if __name__ == '__main__':
     app.run('0.0.0.0', port=9000, debug=True)
