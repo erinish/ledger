@@ -20,7 +20,7 @@ api = Api(app)
 TASKFIELDS = {'task': fields.String,
               'uri': fields.String,
               'time': fields.Integer,
-              'status': fields.String 
+              'status': fields.String
               } 
 
 if not Path(TASKFILE).is_file():
@@ -40,15 +40,16 @@ class Tasks(Resource):
     @marshal_with(TASKFIELDS)
     def put(self):
         """handle put request for new tasks"""
-        stamp = request.form['time']
-        msg = request.form['task']
+        print(request.json)
+        stamp = request.json['time']
+        msg = request.json['task']
         digest = str(stamp) + msg
         taskid = hashlib.sha256(digest.encode()).hexdigest()
         if taskid not in TASKDATA:
             TASKDATA[taskid] = {}
         else:
             return 401
-        for k, v in request.form.items():
+        for k, v in request.json.items():
             TASKDATA[taskid][k] = v
         TASKDATA[taskid]['uri'] = "/task/{}".format(taskid)
         with open(TASKFILE, 'w') as f:
@@ -88,9 +89,13 @@ api.add_resource(TaskHandler, '/task/<string:taskid>')
 
 @app.route('/')
 def main():
-    tasksbytime = copy.deepcopy(sorted(TASKDATA.items(), key=lambda x: x[1]['time'], reverse=True))
-    for task in tasksbytime:
-        task[1]['time'] = arrow.get(task[1]['time']).to('local').format('MM/DD/YY HH:mm')
-    return render_template('index.html', tasks=tasksbytime)
+#    tasksbytime = copy.deepcopy(sorted(TASKDATA.items(), key=lambda x: x[1]['time'], reverse=True))
+#    for task in tasksbytime:
+#        task[1]['time'] = arrow.get(task[1]['time']).to('local').format('MM/DD/YY HH:mm')
+    return render_template('index.html')
+
+@app.route('/testing')
+def testing():
+    return render_template('testing.html')
 if __name__ == '__main__':
     app.run('0.0.0.0', port=9000, debug=True)

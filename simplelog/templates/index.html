@@ -33,10 +33,8 @@
             <a class="nav-link" href="#">Completed</a>
           </li>
         </ul>
-        <form class="form-inline mt-2 mt-md-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+          <input class="form-control mr-sm-2" type="text" placeholder="Add Task" aria-label="Add Task" id="newTaskText">
+          <button id="btnTask" class="btn btn-outline-success my-2 my-sm-0" type="button">Add Task</button>
       </div>
     </nav>
 
@@ -56,14 +54,6 @@
                 </tr>
               </thead>
               <tbody>
-                {% for task in tasks %}
-                <tr>
-                  <td>{{ task[0][:6] }}..</td>
-                  <td>{{ task[1].time }}</td>
-                  <td>{{ task[1].status }}</td>
-                  <td>{{ task[1].task }}</td>
-                </tr>
-                {% endfor %}
               </tbody>
             </table>
           </div>
@@ -80,5 +70,59 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   </body>
+  <script>
+    var tbody = document.querySelector('tbody');
+    var btn = document.querySelector('#btnTask');
+    var inpt = document.querySelector('#newTaskText');
+
+      var tasks;
+
+        function getTasks() {
+          while(tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
+          }
+            var request = new XMLHttpRequest();
+            request.open('GET', 'http://tlvericu16.mskcc.org:9000/task');
+            request.responseType = 'json';
+            request.onload = function () {
+                tasks = request.response;
+                for (var task in tasks) {
+                  var tr = document.createElement('tr');
+                  var task_id = document.createElement('td');
+                  var task_time = document.createElement('td');
+                  var task_status = document.createElement('td');
+                  var task_text = document.createElement('td');
+                  task_id.textContent = task.slice(0, 5) + "..";
+                  task_time.textContent = tasks[task]['time'];
+                  task_status.textContent = tasks[task]['status'];
+                  task_text.textContent = tasks[task]['task'];
+                  tr.appendChild(task_id);
+                  tr.appendChild(task_time);
+                  tr.appendChild(task_status);
+                  tr.appendChild(task_text);
+                  tbody.appendChild(tr);
+                }
+            }
+            request.send();
+        }
+
+    getTasks();
+
+    function addTask() {
+      var pdata = {"task": inpt.value,
+                   "time": String(Math.floor(Date.now() / 1000 )),
+                   "status": "open"
+                   }
+      var req_new_task = new XMLHttpRequest();
+      req_new_task.open("PUT", "http://tlvericu16.mskcc.org:9000/task");
+      req_new_task.setRequestHeader("Content-type", "application/json");
+      req_new_task.send(JSON.stringify(pdata));
+      inpt.value = "";
+      inpt.focus();
+      getTasks();
+    }
+
+    btn.addEventListener("click", addTask);
+  </script>
 </html>
 

@@ -4,6 +4,7 @@
 Quick task logging
 """
 import re
+import json
 import requests as req
 import click
 import arrow
@@ -73,10 +74,12 @@ def add_task(msg, status):
         status = 'open'
     msg = " ".join(msg)
     stamp = arrow.now().timestamp
-    r = req.put("{}/task".format(API), data={'task': msg,
+    headers = {"Content-Type": "application/json"}
+    r = req.put("{}/task".format(API), data=json.dumps({'task': msg,
                                              'time': stamp,
                                              'status': status
-                                             })
+                                             }),
+                                       headers=headers)
     print(r.text)
 
 @cli.command(name='rm')

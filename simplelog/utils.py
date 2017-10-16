@@ -27,8 +27,3 @@ def filter_tasks(task, **kwargs):
             if key == 'status':
                 tests.append(task['status'] == value)
     return all(tests)    
-
-
-def get_sorted_tasks(tasks, filterkwargs):
-    """return sorted tuple of our tasks"""
-    tasksbytime = sorted(tasks.items(), key=lambda x: x[1]['time'], reverse=True)
