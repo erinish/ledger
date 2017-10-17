@@ -47,6 +47,7 @@
             <table class="table table-striped">
               <thead>
                 <tr>
+                  <th></th>
                   <th>ID</th>
                   <th>TIME</th>
                   <th>STATUS</th>
@@ -70,59 +71,6 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   </body>
-  <script>
-    var tbody = document.querySelector('tbody');
-    var btn = document.querySelector('#btnTask');
-    var inpt = document.querySelector('#newTaskText');
-
-      var tasks;
-
-        function getTasks() {
-          while(tbody.firstChild) {
-            tbody.removeChild(tbody.firstChild);
-          }
-            var request = new XMLHttpRequest();
-            request.open('GET', 'http://tlvericu16.mskcc.org:9000/task');
-            request.responseType = 'json';
-            request.onload = function () {
-                tasks = request.response;
-                for (var task in tasks) {
-                  var tr = document.createElement('tr');
-                  var task_id = document.createElement('td');
-                  var task_time = document.createElement('td');
-                  var task_status = document.createElement('td');
-                  var task_text = document.createElement('td');
-                  task_id.textContent = task.slice(0, 5) + "..";
-                  task_time.textContent = tasks[task]['time'];
-                  task_status.textContent = tasks[task]['status'];
-                  task_text.textContent = tasks[task]['task'];
-                  tr.appendChild(task_id);
-                  tr.appendChild(task_time);
-                  tr.appendChild(task_status);
-                  tr.appendChild(task_text);
-                  tbody.appendChild(tr);
-                }
-            }
-            request.send();
-        }
-
-    getTasks();
-
-    function addTask() {
-      var pdata = {"task": inpt.value,
-                   "time": String(Math.floor(Date.now() / 1000 )),
-                   "status": "open"
-                   }
-      var req_new_task = new XMLHttpRequest();
-      req_new_task.open("PUT", "http://tlvericu16.mskcc.org:9000/task");
-      req_new_task.setRequestHeader("Content-type", "application/json");
-      req_new_task.send(JSON.stringify(pdata));
-      inpt.value = "";
-      inpt.focus();
-      getTasks();
-    }
-
-    btn.addEventListener("click", addTask);
-  </script>
+  <script src="../templates/main.js"></script>
 </html>
 
