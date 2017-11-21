@@ -1,7 +1,0 @@
-03/06/15 14:10:59 | PLVGENOWEB1 - entered build ticket
-03/06/15 14:11:16 | GENOME.MSKCC.ORG - migrated DNS to newly-built server
-03/06/15 14:11:39 | ACMAN - reproduced openview success page issue. working on better logging for diagnosis
-03/06/15 14:12:46 | GIT - Josh Kunken reporting some errors when commiting code. investigation ongoing
-03/06/15 14:13:18 | PLMPH01 - fixed filled filesystem
-03/06/15 14:13:23 | PLMPH01 - build ticket closed
-03/06/15 15:47:02 | Quizzicle - followed up on Vendor VPN access for their vendor

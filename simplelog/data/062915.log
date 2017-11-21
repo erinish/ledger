@@ -1,5 +1,0 @@
-06/29/15 08:54:39 | sunday -- worked with niral to restore downed databases (patient keeper, SKIdb)
-06/29/15 08:54:56 | delivered report to storage team regarding sunday outage
-06/29/15 08:55:24 | plvaddmcon2 - backup failed w/orphaned snapshots that cannot be consolidated. working with kevin to remove file lock
-06/29/15 11:09:34 | vocera -- switched communication over to port 443 between proxy and backends
-06/29/15 14:36:13 | www -- restored services w/ Joe

@@ -1,5 +1,0 @@
-04/20/15 16:04:03 | WWW - drupal config updated in puppet
-04/20/15 16:04:10 | WWW - nginx config updated in puppet
-04/20/15 16:04:19 | WWW - fixed nginx config that was broken by P2
-04/20/15 16:04:35 | WWW - fixed logrotate problem with nginx
-04/20/15 16:04:57 | WWW - server standup meeting

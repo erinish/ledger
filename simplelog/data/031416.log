@@ -1,5 +1,0 @@
-03/14/16 09:02:04 | updated WWW logrotation and syslog to separate out drupal
-03/14/16 09:56:24 | removed user res_esgsrv from vcenter database and added again in attempt to fix permissions issue
-03/14/16 10:31:19 | confirmed issue with Jose polling is fixed after removing the bad user data for res_esgsrv
-03/14/16 10:55:17 | patched ESXi hosts being lent to enterprise storage for testing
-03/14/16 12:30:37 | investigating some backup failures on our VMware environment w/ Kevin

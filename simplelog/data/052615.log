@@ -1,6 +1,0 @@
-05/26/15 08:01:25 | www test environment puppet changes to remove all D6 components
-05/26/15 08:43:16 | setup kibana view for puppet-agent to watch for failed runs. Will be more important as we move everything over
-05/26/15 09:49:07 | disabled unused puppet reports to prevent mountpoint from filling up
-05/26/15 13:34:39 | troubleshooting sesssion with peter from quizzicle
-05/26/15 14:10:27 | setup host and storage DRS anti-affinity for access manager
-05/26/15 15:50:22 | patched, rebooted plmph01. disabled hyperthreading

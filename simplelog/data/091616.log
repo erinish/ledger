@@ -1,2 +1,0 @@
-09/16/16 15:07:41 | created preliminary ubuntu preseed build environment (kickstart equivalent)
-09/16/16 15:08:03 | added ubuntu support to a number of our puppet modules

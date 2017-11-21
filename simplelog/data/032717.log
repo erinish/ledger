@@ -1,2 +1,0 @@
-03/27/17 15:02:58 | wrote puppet module to automatically setup elastic stack for log collection
-03/27/17 15:03:22 | moved plvelk1 and 2 to puppet control, upgraded to version 5.2.2

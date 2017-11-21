@@ -1,3 +1,0 @@
-05/13/16 08:41:29 | fixed SSL certificate chain on redcap.mskcc.org
-05/13/16 10:41:41 | fixed account permissions for huergasi on tlvedghp/plvedggit servers
-05/13/16 11:29:44 | determined root cause of WWW pingdom outage can be traced to 404 errors in Drupal -- Jake will investigate from here

@@ -1,4 +1,0 @@
-12/07/15 08:34:59 | applied licenses to JRSC ESXi hosts
-12/07/15 09:36:06 | mskcc-sudo - rhel 7 support and toggle function
-12/07/15 12:33:08 | fixed logrotate on plvqzcldb1 to compress
-12/07/15 12:43:22 | entered dns request for sean mcintyre (discover.mskcc.org)

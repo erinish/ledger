@@ -1,4 +1,0 @@
-06/27/17 09:37:53 | issued certificates for andrew mahoski
-06/27/17 09:38:06 | patched plvqzcldb1 (dmz - after hours)
-06/27/17 09:38:25 | put /etc/sudoers under configuration management (puppet)
-06/27/17 10:57:09 | patched plskidb1/2

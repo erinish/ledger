@@ -1,7 +1,0 @@
-08/10/15 09:46:59 | built plvcbioesrs1
-08/10/15 09:47:03 | built plvcbioesrs2
-08/10/15 09:47:20 | spoke with kyung regarding new workstation install
-08/10/15 09:47:30 | began decommission of plvfmri1
-08/10/15 15:19:43 | updated puppet routing module to fail gracefully
-08/10/15 15:20:02 | diagnosed java issue for hadoop cluster
-08/10/15 15:20:41 | working on build for rick - plvewss3

@@ -1,6 +1,0 @@
-03/30/15 15:10:33 | WWW - puppet configuration changes for nginx
-03/30/15 15:10:42 | WWW - liasing with networking team for F5
-03/30/15 15:10:48 | WWW - phone call with Evan for status
-03/30/15 15:10:57 | WWW - meeting with major stakeholders for status updates
-03/30/15 15:11:38 | Prod VMware - memory problem with plclai1. Entered change request, reseated RAM, ran memtest. No further hardware issues so far
-03/30/15 15:12:03 | ELK - updated to Kibana 4, wrote init script for new service

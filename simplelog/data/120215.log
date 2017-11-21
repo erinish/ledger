@@ -1,4 +1,0 @@
-12/02/15 12:54:17 | documented rhel automated build process
-12/02/15 12:54:33 | updated rhel 7 build scripts - puppet, satellite, centrify working
-12/02/15 15:18:08 | covered WWW code release
-12/02/15 15:18:40 | fixed issue on plvocralliance1 related to a ssl.conf setting for apache

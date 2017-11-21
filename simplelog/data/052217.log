@@ -1,3 +1,0 @@
-05/22/17 12:11:14 | sudoers file remediation w/ Cerner
-05/22/17 12:11:30 | spoke with Bryan about splunk indexers using all available memory
-05/22/17 12:39:21 | investigated XFS kmem_alloc locking on pledga02

@@ -1,5 +1,0 @@
-03/31/15 12:16:14 | Wrote PowerCLI script to enable/disable SSH on ESX hosts
-03/31/15 13:58:28 | Upgraded plvnexpose1-4 resource allocations
-03/31/15 14:27:44 | Requested monitoring for renamed hosts plclrdm1-3
-03/31/15 14:43:15 | DNS entry for oslog2.mskcc.org
-03/31/15 14:43:45 | vCOps tuning

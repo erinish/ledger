@@ -1,8 +1,0 @@
-03/16/16 08:58:27 | updated permissions for res_vcebr to allow deployment of proxies in both vCenters
-03/16/16 09:48:26 | MariaDB in test still having issues -- escalated case and brought test environment back online
-03/16/16 09:48:49 | Added HttpOnly header to tlvosticket1 at request of Andrew Zarski
-03/16/16 09:49:21 | compiled list of avamar proxies and their configuration information for Kevins redeloyment to follow avamar upgrade
-03/16/16 10:26:59 | Added HttpOnly header to plvosticket1 at request of Andrew Zarski
-03/16/16 11:07:01 | wrote script to automate rename/shutdown of avamar proxies
-03/16/16 11:33:09 | updated puppet module for snmp to check for presence of serviceguard and apply appropriate configuration
-03/16/16 11:33:48 | MariaDB - provided logs from all servers to support

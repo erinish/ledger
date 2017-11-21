@@ -1,3 +1,0 @@
-03/16/15 12:48:07 | PLMPH01 - fixed matlab issue for Dr. Ross
-03/16/15 12:48:20 | PLCLAZ1-6 - investigating issue with syslogs not reaching ELK stack
-03/16/15 14:52:32 | Logging - created test build of Beaver log shipper for ELK.

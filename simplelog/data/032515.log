@@ -1,8 +1,0 @@
-03/25/15 09:12:26 | WWW - built production environment at Phase 2's request
-03/25/15 09:13:09 | PLCLEWSS2 - Fixed problem with IMM after (improper?) configuration by IBM tech
-03/25/15 09:13:41 | FMRI - still dealing with licensing issues. Asked Kyung for access to troubleshoot personally
-03/25/15 09:13:57 | WWW - daily meetings
-03/25/15 09:14:16 | PLEDGA01 - build complete
-03/25/15 09:17:25 | Workstations - provided patching instructions to Andrew Brish-Guo for workstation found by security audit
-03/25/15 11:38:04 | WWW - added acl support to puppet for gluster mountpoint and pushed to production
-03/25/15 11:38:38 | FMRI - discovered licensing issue is due to Desktop/Client supporting only one socket. PO needed to remediate

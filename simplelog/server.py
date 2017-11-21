@@ -14,8 +14,16 @@ from flask_restful import Resource, Api, fields, marshal_with
 MYDIR = os.path.dirname(os.path.abspath(__file__))
 TASKFILE = os.path.join(MYDIR, 'data', 'tasks.json')
 
+
+def logit(msg):
+    logfile = "/tmp/wtf"
+    with open(logfile, 'a') as f:
+        f.write(str(msg))
+
+
 app = Flask('simplelog')
 api = Api(app)
+
 
 TASKFIELDS = {'task': fields.String,
               'uri': fields.String,
@@ -27,15 +35,18 @@ if not Path(TASKFILE).is_file():
     with open(TASKFILE, 'w') as f:
         json.dump({}, f)
 
-with open(TASKFILE, 'r') as f:
-    TASKDATA = json.load(f)
+def get_task_data():
+    with open(TASKFILE, 'r') as f:
+        return json.load(f)
+    return False
 
 
 class Tasks(Resource):
-    """Add new TASKDATA and list all"""
+    """Add new taskdata and list all"""
     def get(self):
         """handle get request for all tasks"""
-        return TASKDATA
+        taskdata = get_task_data()
+        return taskdata
 
     @marshal_with(TASKFIELDS)
     def put(self):
@@ -45,43 +56,47 @@ class Tasks(Resource):
         msg = request.json['task']
         digest = str(stamp) + msg
         taskid = hashlib.sha256(digest.encode()).hexdigest()
-        if taskid not in TASKDATA:
-            TASKDATA[taskid] = {}
+        taskdata = get_task_data()
+        if taskid not in taskdata:
+            taskdata[taskid] = {}
         else:
             return 401
         for k, v in request.json.items():
-            TASKDATA[taskid][k] = v
-        TASKDATA[taskid]['uri'] = "/task/{}".format(taskid)
+            taskdata[taskid][k] = v
+        taskdata[taskid]['uri'] = "/task/{}".format(taskid)
         with open(TASKFILE, 'w') as f:
-            json.dump(TASKDATA, f)
-        return TASKDATA[taskid], 201
+            json.dump(taskdata, f)
+        return taskdata[taskid], 201
 
 
 
 class TaskHandler(Resource):
-    """Work with specific TASKDATA"""
+    """Work with specific taskdata"""
     def get(self, taskid):
         """retrieve a specific task"""
-        if taskid not in TASKDATA:
+        taskdata = get_task_data()
+        if taskid not in taskdata:
             return {taskid: 'not found'}, 404
-        return TASKDATA[taskid]
+        return taskdata[taskid]
 
     def delete(self, taskid):
         """delete the specified task"""
-        deleted = TASKDATA.pop(taskid)
+        taskdata = get_task_data()
+        deleted = taskdata.pop(taskid)
         with open(TASKFILE, 'w') as f:
-            json.dump(TASKDATA, f)
+            json.dump(taskdata, f)
         return deleted
 
     def put(self, taskid):
         """update the specified task"""
-        if taskid not in TASKDATA:
-            TASKDATA[taskid] = {}
-        for k, v in request.form.items():
-            TASKDATA[taskid][k] = v
+        taskdata = get_task_data()
+        if taskid not in taskdata:
+            taskdata[taskid] = {}
+        for k, v in request.json.items():
+            taskdata[taskid][k] = v
         with open(TASKFILE, 'w') as f:
-            json.dump(TASKDATA, f)
-        return TASKDATA[taskid], 201
+            json.dump(taskdata, f)
+        return taskdata[taskid], 201
 
 api.add_resource(Tasks, '/task')
 api.add_resource(TaskHandler, '/task/<string:taskid>')
@@ -89,7 +104,7 @@ api.add_resource(TaskHandler, '/task/<string:taskid>')
 
 @app.route('/')
 def main():
-#    tasksbytime = copy.deepcopy(sorted(TASKDATA.items(), key=lambda x: x[1]['time'], reverse=True))
+#    tasksbytime = copy.deepcopy(sorted(taskdata.items(), key=lambda x: x[1]['time'], reverse=True))
 #    for task in tasksbytime:
 #        task[1]['time'] = arrow.get(task[1]['time']).to('local').format('MM/DD/YY HH:mm')
     return render_template('index.html')
@@ -97,5 +112,9 @@ def main():
 @app.route('/testing')
 def testing():
     return render_template('testing.html')
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return 'This route does not exist {}'.format(request.url), 404
 if __name__ == '__main__':
     app.run('0.0.0.0', port=9000, debug=True)

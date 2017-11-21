@@ -1,4 +1,0 @@
-11/17/15 10:22:03 | fixed account expiry for quizzicle user on plvqzcldb1 and ran scripts for user
-11/17/15 14:58:46 | opened case with red hat about z-channels for legacy systems
-11/17/15 14:59:00 | added new pcctc server to access manager
-11/17/15 15:33:55 | fixed patrol using 100% CPU on plemsdb2 -- found problem thanks to oslog data

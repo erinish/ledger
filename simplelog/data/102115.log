@@ -1,5 +1,0 @@
-10/21/15 09:09:34 | fixed syslogging for rhel5 and dmz
-10/21/15 09:09:41 | upgraded vcenter to 6
-10/21/15 09:09:57 | fixed sudoers file on tlvdpsolr1
-10/21/15 09:10:08 | added disk to new git server for knowledge engine
-10/21/15 10:38:41 | updated puppet code push to new repository for WWW
