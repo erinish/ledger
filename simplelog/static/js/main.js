@@ -58,10 +58,13 @@ function getTasks(status = "open") {
                 close_span.innerHTML = "&#10004;";
                 var task_id = document.createElement('td');
                 var task_time = document.createElement('td');
+                var task_timestamp = document.createElement('td');
                 var task_status = document.createElement('td');
                 var task_text = document.createElement('td');
                 task_id.textContent = task.slice(0, 5) + "..";
-                task_time.textContent = tasks[task]['time'];
+                task_time.textContent = timestampToDate(tasks[task]['time']);
+                task_timestamp.textContent = tasks[task]['time'];
+                task_timestamp.hidden = true;
                 task_status.textContent = tasks[task]['status'];
                 task_text.textContent = tasks[task]['task'];
 
@@ -73,13 +76,14 @@ function getTasks(status = "open") {
                 tr.appendChild(btn_td);
                 tr.appendChild(task_id);
                 tr.appendChild(task_time);
+                tr.appendChild(task_timestamp);
                 tr.appendChild(task_status);
                 tr.appendChild(task_text);
                 tbody.appendChild(tr);
             }
         }
 
-        sortTable(document.querySelector('tbody'), 2);
+        sortTable(document.querySelector('tbody'), 3);
     }
     request.send();
 }
@@ -92,12 +96,18 @@ function addTask() {
                 "status": "open"
                 }
     var req_new_task = new XMLHttpRequest();
+
+    req_new_task.onreadystatechange = function() {
+        if(this.readyState === XMLHttpRequest.DONE && this.status === 201) {
+            getTasks(currentView);
+        }
+    }
+
     req_new_task.open("PUT", "task");
     req_new_task.setRequestHeader("Content-Type", "application/json");
     req_new_task.send(JSON.stringify(pdata));
     inpt.value = "";
     inpt.focus();
-    getTasks();
 }
 
 function enterAddTask(event) {
@@ -110,6 +120,13 @@ function enterAddTask(event) {
 function deleteTask(taskid) {
     var req_delete_task = new XMLHttpRequest();
     var task_url = "task/" + taskid;
+
+    req_delete_task.onreadystatechange = function() {
+        if(this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            getTasks(currentView);
+        }
+    }
+
     req_delete_task.open("DELETE", task_url);
     req_delete_task.send();
     getTasks(currentView);
@@ -120,6 +137,13 @@ function closeTask(taskid) {
     pdata["status"] = "closed";
     var req_close_task = new XMLHttpRequest();
     var task_url = "task/" + taskid;
+
+    req_close_task.onreadystatechange = function() {
+        if(this.readyState === XMLHttpRequest.DONE && this.status === 201) {
+            getTasks(currentView);
+        }
+    }
+
     req_close_task.open("PUT", task_url);
     req_close_task.setRequestHeader("Content-Type", "application/json");
     req_close_task.send(JSON.stringify(pdata));
@@ -151,6 +175,23 @@ function sortTable(table, keyrow) {
             swap = true;
         }
    }
+}
+
+function timestampToDate(timestamp) {
+                var taskDate = new Date(timestamp * 1000);
+                var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];  
+                var monthsOfYear = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                var taskHours = "0" + taskDate.getHours();
+                var taskMinutes = "0" + taskDate.getMinutes();
+                var taskSeconds = "0" + taskDate.getSeconds();
+                var taskYear = taskDate.getFullYear();
+                var taskDay = daysOfWeek[taskDate.getDay()];
+                var taskDayNum = taskDate.getDate();
+                var taskMonth = monthsOfYear[taskDate.getMonth()];
+
+                var formattedDate = taskMonth + " " + taskDayNum + " " + taskHours.substr(-2) + ":" + taskMinutes.substr(-2) + ":" + taskSeconds.substr(-2);
+
+                return formattedDate;
 }
 
 btn.addEventListener("click", addTask);

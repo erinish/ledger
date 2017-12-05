@@ -10,7 +10,7 @@ import click
 import arrow
 from simplelog.utils import check_id, filter_tasks
 
-API = 'http://tlvericu16.mskcc.org:9000'
+API = 'http://tlvericu16.mskcc.org/simplelog'
 
 @click.group()
 def cli():
@@ -73,7 +73,7 @@ def add_task(msg, status):
     if not status:
         status = 'open'
     msg = " ".join(msg)
-    stamp = arrow.now().timestamp
+    stamp = str(arrow.now().timestamp)
     headers = {"Content-Type": "application/json"}
     r = req.put("{}/task".format(API), data=json.dumps({'task': msg,
                                              'time': stamp,
@@ -96,9 +96,10 @@ def del_task(msg):
 @click.argument('msg', nargs=-1)
 def close_task(tsk, msg):
     """close a task with an optional comment"""
+    headers = {"Content-Type": "application/json"}
     uri = check_id(API, tsk)
     if uri:
-        r = req.put("{}/task/{}".format(API,uri), data={'status': 'closed'})
+        r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed'}), headers=headers)
         print(r.text)
 
 

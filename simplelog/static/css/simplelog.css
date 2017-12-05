@@ -1,3 +1,6 @@
+th, td {
+    white-space: nowrap;
+}
 th:last-child {
     width: 100%;
 }
