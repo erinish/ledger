@@ -23,6 +23,12 @@ var tasks;
 
 function getTasks(status = "open") {
     //clear everything in the table
+    if (status == "closed") {
+        reversed = true;
+    } else {
+        reversed = false;
+    }
+
     while(tbody.firstChild) {
         tbody.removeChild(tbody.firstChild);
     }
@@ -83,7 +89,7 @@ function getTasks(status = "open") {
             }
         }
 
-        sortTable(document.querySelector('tbody'), 3);
+        sortTable(document.querySelector('tbody'), 3, reversed);
     }
     request.send();
 }
@@ -129,7 +135,7 @@ function deleteTask(taskid) {
 
     req_delete_task.open("DELETE", task_url);
     req_delete_task.send();
-    getTasks(currentView);
+//    getTasks(currentView);
 }
 
 function closeTask(taskid) {
@@ -147,10 +153,10 @@ function closeTask(taskid) {
     req_close_task.open("PUT", task_url);
     req_close_task.setRequestHeader("Content-Type", "application/json");
     req_close_task.send(JSON.stringify(pdata));
-    getTasks(currentView);
+//    getTasks(currentView);
 }
 
-function sortTable(table, keyrow) {
+function sortTable(table, keyrow, reversed = false) {
    var rows;
    var current, next;
    var swap = true;
@@ -165,9 +171,16 @@ function sortTable(table, keyrow) {
             current = rows[i].querySelectorAll('td')[keyrow];
             next = rows[i + 1].querySelectorAll('td')[keyrow];
 
-            if (Number(current.textContent) > Number(next.textContent)) {
-                makeswap = true;
-                break;
+            if (reversed) {
+                if (Number(current.textContent) < Number(next.textContent)) {
+                    makeswap = true;
+                    break;
+                }
+            } else {
+                if (Number(current.textContent) > Number(next.textContent)) {
+                    makeswap = true;
+                    break;
+                }
             }
         }
         if (makeswap) {

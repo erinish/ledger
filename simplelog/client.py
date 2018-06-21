@@ -12,6 +12,7 @@ from simplelog.utils import check_id, filter_tasks
 
 API = 'http://tlvericu16.mskcc.org/simplelog'
 
+
 @click.group()
 def cli():
     pass
@@ -43,13 +44,17 @@ def report_tasks(days, email):
 @click.option('-l', '--long', required=False, is_flag=True)
 @click.option('-d', '--days', help="number of days before now")
 @click.option('-s', '--status')
-def list_task(long, days, status):
+@click.option('-z', '--zefault', required=False, is_flag=True)
+def list_task(long, days, status, zefault):
     """List all tasks"""
     filterkwargs = {}
-    if days:
+    if days and not zefault:
         filterkwargs['days'] = arrow.now().timestamp - (int(days) * 86400)
-    if status:
+    if status and not zefault:
         filterkwargs['status'] = status
+    if zefault:
+#        filterkwargs['days'] = arrow.now().timestamp - (7 * 86400)
+        filterkwargs['status'] = 'open'
     mytasks = req.get("{}/task".format(API)).json()
     tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
     print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
