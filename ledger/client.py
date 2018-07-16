@@ -106,7 +106,7 @@ def add_task(msg, status):
                                  'status': status
                                  }),
                 headers=headers)
-    display.dump(r.json)
+    display.dump(r.json())
 
 
 @cli.command(name='rm')
@@ -116,7 +116,7 @@ def del_task(msg):
     uri = check_id(API, msg)
     if uri:
         r = req.delete("{}/task/{}".format(API, uri))
-        display.dump(r.json)
+        display.dump(r.json())
 
 
 @cli.command(name='close')
@@ -128,7 +128,7 @@ def close_task(tsk, msg):
     uri = check_id(API, tsk)
     if uri:
         r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed'}), headers=headers)
-        display.dump(r.json)
+        display.dump(r.json())
 
 
 if __name__ == '__main__':
