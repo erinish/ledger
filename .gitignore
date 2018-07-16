@@ -1,2 +1,4 @@
 .vscode
+ledger.egg-info
 ledger/__pycache__
+**nohup.out
