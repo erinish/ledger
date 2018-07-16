@@ -25,7 +25,7 @@ class Display():
         if self.callback_plugin == 'json':
             print(json.dumps(json_msg))
         elif self.callback_plugin == 'yaml':
-            print(yaml.dump(yaml.load(json.dumps(json_msg))))
+            print(yaml.dump(yaml.load(json.dumps(json_msg))default_flow_style=False))
 
     def print(self, msg):
         print(msg)
