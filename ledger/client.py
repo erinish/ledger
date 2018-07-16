@@ -9,8 +9,28 @@ import requests as req
 import click
 import arrow
 from ledger.utils import check_id, filter_tasks
+CALLBACK_PLUGIN = 'yaml'
+if CALLBACK_PLUGIN == 'yaml':
+    import pyyaml as yaml
 
 API = 'http://localhost:9000'
+
+
+class Display(callback_plugin):
+
+    def __init__(self):
+        self.callback_plugin = CALLBACK_PLUGIN
+
+    def dump(self, json_msg):
+        if self.callback_plugin == 'json':
+            print(json.dumps(json_msg))
+        elif self.callback_plugin == 'yaml':
+            print(yaml.dumps(yaml.loads(json.dumps(json_msg))))
+
+    def print(self, msg):
+        print(msg)
+
+display = Display(CALLBACK_PLUGIN)
 
 
 @click.group()
@@ -86,7 +106,7 @@ def add_task(msg, status):
                                  'status': status
                                  }),
                 headers=headers)
-    print(r.text)
+    display.dump(r.json)
 
 
 @cli.command(name='rm')
@@ -96,7 +116,7 @@ def del_task(msg):
     uri = check_id(API, msg)
     if uri:
         r = req.delete("{}/task/{}".format(API, uri))
-        print(r.text)
+        display.dump(r.json)
 
 
 @cli.command(name='close')
@@ -108,7 +128,7 @@ def close_task(tsk, msg):
     uri = check_id(API, tsk)
     if uri:
         r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed'}), headers=headers)
-        print(r.text)
+        display.dump(r.json)
 
 
 if __name__ == '__main__':
