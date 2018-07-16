@@ -16,10 +16,10 @@ if CALLBACK_PLUGIN == 'yaml':
 API = 'http://localhost:9000'
 
 
-class Display(callback_plugin):
+class Display():
 
-    def __init__(self):
-        self.callback_plugin = CALLBACK_PLUGIN
+    def __init__(self, callback_plugin):
+        self.callback_plugin = callback_plugin
 
     def dump(self, json_msg):
         if self.callback_plugin == 'json':
