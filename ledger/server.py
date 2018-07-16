@@ -29,11 +29,12 @@ TASKFIELDS = {'task': fields.String,
               'uri': fields.String,
               'time': fields.Integer,
               'status': fields.String
-              } 
+              }
 
 if not Path(TASKFILE).is_file():
     with open(TASKFILE, 'w') as f:
         json.dump({}, f)
+
 
 def get_task_data():
     with open(TASKFILE, 'r') as f:
@@ -67,7 +68,6 @@ class Tasks(Resource):
         with open(TASKFILE, 'w') as f:
             json.dump(taskdata, f)
         return taskdata[taskid], 201
-
 
 
 class TaskHandler(Resource):
@@ -104,14 +104,13 @@ api.add_resource(TaskHandler, '/task/<string:taskid>')
 
 @app.route('/')
 def main():
-#    tasksbytime = copy.deepcopy(sorted(taskdata.items(), key=lambda x: x[1]['time'], reverse=True))
-#    for task in tasksbytime:
-#        task[1]['time'] = arrow.get(task[1]['time']).to('local').format('MM/DD/YY HH:mm')
     return render_template('index.html')
+
 
 @app.route('/testing')
 def testing():
     return render_template('testing.html')
+
 
 @app.errorhandler(404)
 def page_not_found(error):

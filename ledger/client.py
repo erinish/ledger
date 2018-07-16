@@ -53,7 +53,6 @@ def list_task(long, days, status, zefault):
     if status and not zefault:
         filterkwargs['status'] = status
     if zefault:
-#        filterkwargs['days'] = arrow.now().timestamp - (7 * 86400)
         filterkwargs['status'] = 'open'
     mytasks = req.get("{}/task".format(API)).json()
     tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
@@ -61,7 +60,7 @@ def list_task(long, days, status, zefault):
     for entry in tasksbytime:
         if filter_tasks(entry[1], **filterkwargs):
             if long:
-                digest = entry[0] 
+                digest = entry[0]
             else:
                 digest = entry[0][:6] + ".."
             humantime = arrow.get(entry[1]['time']).to('local').format('MM/DD/YY HH:mm')
@@ -69,6 +68,7 @@ def list_task(long, days, status, zefault):
                                                  humantime,
                                                  entry[1]['status'],
                                                  entry[1]['task']))
+
 
 @cli.command(name='add')
 @click.argument('msg', nargs=-1)
@@ -80,12 +80,14 @@ def add_task(msg, status):
     msg = " ".join(msg)
     stamp = str(arrow.now().timestamp)
     headers = {"Content-Type": "application/json"}
-    r = req.put("{}/task".format(API), data=json.dumps({'task': msg,
-                                             'time': stamp,
-                                             'status': status
-                                             }),
-                                       headers=headers)
+    r = req.put("{}/task".format(API),
+                data=json.dumps({'task': msg,
+                                 'time': stamp,
+                                 'status': status
+                                 }),
+                headers=headers)
     print(r.text)
+
 
 @cli.command(name='rm')
 @click.argument('msg', type=click.STRING)
@@ -95,6 +97,7 @@ def del_task(msg):
     if uri:
         r = req.delete("{}/task/{}".format(API, uri))
         print(r.text)
+
 
 @cli.command(name='close')
 @click.argument('tsk')
@@ -106,7 +109,6 @@ def close_task(tsk, msg):
     if uri:
         r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed'}), headers=headers)
         print(r.text)
-
 
 
 if __name__ == '__main__':
