@@ -156,38 +156,89 @@ function closeTask(taskid) {
 //    getTasks(currentView);
 }
 
-function sortTable(table, keyrow, reversed = false) {
-   var rows;
-   var current, next;
-   var swap = true;
-   var makeswap;
-   
-   while(swap) {
-        swap = false;
-        rows = table.rows;
+function mergesort(li) {
+    // a single-length list is sorted
+    if (li.length === 1) {
+        return li;
+    }
 
-        for (var i = 0; i < rows.length - 1; i++) {
-            makeswap = false;
-            current = rows[i].querySelectorAll('td')[keyrow];
-            next = rows[i + 1].querySelectorAll('td')[keyrow];
+    var mid = Math.floor(li.length / 2);
+    var left = li.slice(0, mid);
+    var right = li.slice(mid);
 
-            if (reversed) {
-                if (Number(current.textContent) < Number(next.textContent)) {
-                    makeswap = true;
-                    break;
-                }
+    return merge(mergesort(left), mergesort(right));
+
+    function merge(left, right) {
+        var result = [];
+        var lidx = 0;
+        var ridx = 0;
+
+        // assuming we're getting a tuple of [index, value] so we can return the proper index order
+        while (lidx < left.length && ridx < right.length) {
+            if (left[lidx][1] < right[ridx][1]) {
+                result.push(left[lidx]);
+                lidx++;
             } else {
-                if (Number(current.textContent) > Number(next.textContent)) {
-                    makeswap = true;
-                    break;
-                }
+                result.push(right[ridx]);
+                ridx++;
             }
         }
-        if (makeswap) {
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            swap = true;
-        }
-   }
+        // concat adds the remainder of the left or right array to the end when you reach the length of one of the sides
+        return result.concat(left.slice(lidx).concat(right.slice(ridx)));
+    }
+}
+
+function sortTable(table, keyrow, reversed = false) {
+    var rows = Array.prototype.slice.call(table.rows);
+    var workarray = [];
+    var sortedkeys = [];
+    var data = {};
+
+    for (var i = 0; i < rows.length; i++) {
+        workarray.push([i, rows[i].querySelectorAll('td')[keyrow].textContent]);
+    }
+
+    sortedkeys = mergesort(workarray);
+
+    // clear the current table
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
+
+    for (var i = 0; i < workarray.length; i++) {
+        tbody.appendChild(rows[sortedkeys[i][0]])
+    }
+
+//   var current, next;
+//   var swap = true;
+//   var makeswap;
+//   
+//   while(swap) {
+//        swap = false;
+//        rows = table.rows;
+//
+//        for (var i = 0; i < rows.length - 1; i++) {
+//            makeswap = false;
+//            current = rows[i].querySelectorAll('td')[keyrow];
+//            next = rows[i + 1].querySelectorAll('td')[keyrow];
+//
+//            if (reversed) {
+//                if (Number(current.textContent) < Number(next.textContent)) {
+//                    makeswap = true;
+//                    break;
+//                }
+//            } else {
+//                if (Number(current.textContent) > Number(next.textContent)) {
+//                    makeswap = true;
+//                    break;
+//                }
+//            }
+//        }
+//        if (makeswap) {
+//            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+//            swap = true;
+//        }
+//   }
 }
 
 function timestampToDate(timestamp) {

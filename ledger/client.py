@@ -10,7 +10,7 @@ import click
 import arrow
 from ledger.utils import check_id, filter_tasks
 
-API = 'http://tlvericu16.mskcc.org/ledger'
+API = 'http://localhost:9000'
 
 
 @click.group()

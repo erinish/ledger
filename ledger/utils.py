@@ -1,6 +1,7 @@
 import re
 import requests as req
 
+
 def check_id(api, taskid):
     mytasks = req.get("{}/task".format(api)).json()
     check = []
@@ -26,4 +27,4 @@ def filter_tasks(task, **kwargs):
                 tests.append(int(task['time']) > value)
             if key == 'status':
                 tests.append(task['status'] == value)
-    return all(tests)    
+    return all(tests)

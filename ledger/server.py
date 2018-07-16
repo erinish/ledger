@@ -14,16 +14,8 @@ from flask_restful import Resource, Api, fields, marshal_with
 MYDIR = os.path.dirname(os.path.abspath(__file__))
 TASKFILE = os.path.join(MYDIR, 'data', 'tasks.json')
 
-
-def logit(msg):
-    logfile = "/tmp/wtf"
-    with open(logfile, 'a') as f:
-        f.write(str(msg))
-
-
 app = Flask('ledger')
 api = Api(app)
-
 
 TASKFIELDS = {'task': fields.String,
               'uri': fields.String,
