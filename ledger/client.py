@@ -89,7 +89,7 @@ def list_task(long, days, status, zefault):
             else:
                 digest = entry[0][:6] + ".."
             if status == 'closed':
-                humantime = arrow.get(entry[1]['closed_time']).to('local').format('MM/DD/YY HH:mm')
+                humantime = arrow.get(entry[1]['close_time']).to('local').format('MM/DD/YY HH:mm')
                 print("{:>8} {:<14} {:>6} {}".format(digest,
                                                      humantime,
                                                      entry[1]['status'],
@@ -142,7 +142,7 @@ def close_task(tsk, msg):
     uri = check_id(API, tsk)
     if uri:
         stamp = str(arrow.now().timestamp)
-        r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed', 'closed_time': stamp}), headers=headers)
+        r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed', 'close_time': stamp}), headers=headers)
         display.dump(r.json())
 
 
