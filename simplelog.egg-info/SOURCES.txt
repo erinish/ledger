@@ -1,6 +1,0 @@
-simplelog.egg-info/PKG-INFO
-simplelog.egg-info/SOURCES.txt
-simplelog.egg-info/dependency_links.txt
-simplelog.egg-info/entry_points.txt
-simplelog.egg-info/requires.txt
-simplelog.egg-info/top_level.txt

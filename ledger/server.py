@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-rest server for simplelog
+rest server for Ledger
 """
 import os
 import json
@@ -21,7 +21,7 @@ def logit(msg):
         f.write(str(msg))
 
 
-app = Flask('simplelog')
+app = Flask('ledger')
 api = Api(app)
 
 

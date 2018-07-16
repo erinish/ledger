@@ -1,4 +1,0 @@
-
-        [console_scripts]
-        simplelog=simplelog.client:cli
-    

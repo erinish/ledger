@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Simplelog
+"""Ledger
 
 Quick task logging
 """
@@ -8,9 +8,9 @@ import json
 import requests as req
 import click
 import arrow
-from simplelog.utils import check_id, filter_tasks
+from ledger.utils import check_id, filter_tasks
 
-API = 'http://tlvericu16.mskcc.org/simplelog'
+API = 'http://tlvericu16.mskcc.org/ledger'
 
 
 @click.group()

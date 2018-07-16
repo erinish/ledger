@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='simplelog',
-    version='0.1',
+    name='ledger',
+    version='0.2',
     packages=find_packages(),
-    py_modules=['simplelog'],
-    package_data={'simplelog.data':['*']},
+    py_modules=['ledger'],
+    package_data={'ledger.data':['*']},
     install_requires=[
         'Click',
         'Arrow',
@@ -16,6 +16,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        simplelog=simplelog.client:cli
+        ledger=ledger.client:cli
     ''',
 )
