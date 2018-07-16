@@ -11,7 +11,7 @@ import arrow
 from ledger.utils import check_id, filter_tasks
 CALLBACK_PLUGIN = 'yaml'
 if CALLBACK_PLUGIN == 'yaml':
-    import pyyaml as yaml
+    import yaml
 
 API = 'http://localhost:9000'
 
