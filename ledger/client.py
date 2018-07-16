@@ -22,6 +22,11 @@ class Display():
         self.callback_plugin = callback_plugin
 
     def dump(self, json_msg):
+        """
+        Print a JSON object to the display.
+        Defaults to printing as YAML since this is easier for humans,
+        but supports direct dumping as well.
+        """
         if self.callback_plugin == 'json':
             print(json.dumps(json_msg))
         elif self.callback_plugin == 'yaml':
@@ -83,11 +88,19 @@ def list_task(long, days, status, zefault):
                 digest = entry[0]
             else:
                 digest = entry[0][:6] + ".."
-            humantime = arrow.get(entry[1]['time']).to('local').format('MM/DD/YY HH:mm')
-            print("{:>8} {:<14} {:>6} {}".format(digest,
-                                                 humantime,
-                                                 entry[1]['status'],
-                                                 entry[1]['task']))
+            if status == 'closed':
+                humantime = arrow.get(entry[1]['closed_time']).to('local').format('MM/DD/YY HH:mm')
+                print("{:>8} {:<14} {:>6} {}".format(digest,
+                                                     humantime,
+                                                     entry[1]['status'],
+                                                     entry[1]['task']))
+
+            else:
+                humantime = arrow.get(entry[1]['time']).to('local').format('MM/DD/YY HH:mm')
+                print("{:>8} {:<14} {:>6} {}".format(digest,
+                                                     humantime,
+                                                     entry[1]['status'],
+                                                     entry[1]['task']))
 
 
 @cli.command(name='add')
@@ -103,6 +116,7 @@ def add_task(msg, status):
     r = req.put("{}/task".format(API),
                 data=json.dumps({'task': msg,
                                  'time': stamp,
+                                 'close_time': None,
                                  'status': status
                                  }),
                 headers=headers)
@@ -127,7 +141,8 @@ def close_task(tsk, msg):
     headers = {"Content-Type": "application/json"}
     uri = check_id(API, tsk)
     if uri:
-        r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed'}), headers=headers)
+        stamp = str(arrow.now().timestamp)
+        r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed', 'closed_time': stamp}), headers=headers)
         display.dump(r.json())
 
 

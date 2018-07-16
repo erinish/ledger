@@ -20,6 +20,7 @@ api = Api(app)
 TASKFIELDS = {'task': fields.String,
               'uri': fields.String,
               'time': fields.Integer,
+              'close_time': fields.Integer,
               'status': fields.String
               }
 
