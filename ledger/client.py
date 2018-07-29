@@ -8,7 +8,11 @@ import json
 import requests as req
 import click
 import arrow
-from ledger.utils import check_id, filter_tasks
+from ledger.utils import check_id, filter_tasks, ConfigBoss
+
+config = ConfigBoss()
+print(config.config_data)
+
 CALLBACK_PLUGIN = 'yaml'
 if CALLBACK_PLUGIN == 'yaml':
     import yaml

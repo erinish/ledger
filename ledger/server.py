@@ -11,8 +11,8 @@ from pathlib import Path
 from flask import Flask, request, render_template
 from flask_restful import Resource, Api, fields, marshal_with
 
-MYDIR = os.path.dirname(os.path.abspath(__file__))
-TASKFILE = os.path.join(MYDIR, 'data', 'tasks.json')
+MYDIR = Path.home() / '.ledger'
+TASKFILE = MYDIR / 'tasks.json' 
 
 app = Flask('ledger')
 api = Api(app)
@@ -24,7 +24,14 @@ TASKFIELDS = {'task': fields.String,
               'status': fields.String
               }
 
+MYDIR.mkdir(mode=0o770, exist_ok=True)
+
+
 if not Path(TASKFILE).is_file():
+    with open(TASKFILE, 'w') as f:
+        json.dump({}, f)
+
+if os.stat(TASKFILE).st_size == 0:
     with open(TASKFILE, 'w') as f:
         json.dump({}, f)
 
