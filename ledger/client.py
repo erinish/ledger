@@ -49,8 +49,8 @@ def cli():
 
 @cli.command(name='config')
 def config_dump():
-    for item in config.config_data['defaults']:
-        display.print(item)
+    for k, v in config.config_data['defaults'].items():
+        display.print("{0}={1}".format(k, v))
 
 
 @cli.command(name='report')
