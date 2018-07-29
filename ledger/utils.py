@@ -11,7 +11,7 @@ class ConfigBoss():
         self._user_home_conf = Path.home() / '.ledger' / 'ledger.conf'
         self._system_default_conf = Path('/etc/ledger/ledger.conf')
         self._package_default_conf = Path('ledger.conf')
-        self._config_files = [self._config_file, self._user_home_conf, self._system_default_conf, self._package_default_conf]
+        self._config_files = [self._package_default_conf, self._system_default_conf, self._user_home_conf, self._config_file]
 
         self.config_data = self._parse_config_file()
     
