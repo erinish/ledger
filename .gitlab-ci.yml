@@ -7,3 +7,5 @@ code_copy:
   script: 
     - cp -r * /home/devops/code/ledger/
     - chown -R devops:devops /home/devops/code/ledger/
+  tags:
+    - deploy
