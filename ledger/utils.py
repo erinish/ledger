@@ -11,19 +11,18 @@ class ConfigBoss():
         self._user_home_conf = Path.home() / '.ledger' / 'ledger.conf'
         self._system_default_conf = Path('/etc/ledger/ledger.conf')
         self._package_default_conf = Path('ledger.conf')
-
         self._config_files = [self._config_file, self._user_home_conf, self._system_default_conf, self._package_default_conf]
 
-        # Not checking if exists because ConfigParser handles this gracefully
-        # Standard allowing for hierarchal config overrides
-        for item in self._config_files:
-            self.config_data = self._parse_config_file()
+        self.config_data = self._parse_config_file()
     
 
     def _parse_config_file(self):
 
         self._parser = configparser.ConfigParser()
-        self._parser.read(self._config_file)
+        # Not checking if exists because ConfigParser handles this gracefully
+        # Standard allowing for hierarchal config overrides
+        for item in self._config_files:
+            self._parser.read(item)
         # Return the parser because ConfigParser object actually contains the config data 
         return self._parser
 
