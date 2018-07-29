@@ -8,14 +8,15 @@ class ConfigBoss():
 
     def __init__(self, config_file=None):
         self._config_file = config_file
-        self.user_home_conf = Path.home() / '.ledger' / 'ledger.conf'
-        self.system_default_conf = Path('/etc/ledger/ledger.conf')
-        self.package_default_conf = Path('ledger.conf')
+        self._user_home_conf = Path.home() / '.ledger' / 'ledger.conf'
+        self._system_default_conf = Path('/etc/ledger/ledger.conf')
+        self._package_default_conf = Path('ledger.conf')
 
-        self.config_files = [self.config_file, self.user_home_conf, self.system_default_conf, self.package_default_conf]
+        self._config_files = [self._config_file, self._user_home_conf, self._system_default_conf, self._package_default_conf]
 
         # Not checking if exists because ConfigParser handles this gracefully
-        for item in self.config_files:
+        # Standard allowing for hierarchal config overrides
+        for item in self._config_files:
             self.config_data = self._parse_config_file()
     
 
