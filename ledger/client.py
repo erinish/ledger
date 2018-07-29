@@ -11,7 +11,7 @@ import arrow
 from ledger.utils import check_id, filter_tasks, ConfigBoss
 
 config = ConfigBoss()
-print(config.config_data)
+
 
 CALLBACK_PLUGIN = 'yaml'
 if CALLBACK_PLUGIN == 'yaml':
@@ -45,6 +45,12 @@ display = Display(CALLBACK_PLUGIN)
 @click.group()
 def cli():
     pass
+
+
+@cli.command(name='config')
+def config_dump():
+    for item in config.config_data['defaults']:
+        display.print(item)
 
 
 @cli.command(name='report')
