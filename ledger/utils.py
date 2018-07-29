@@ -20,7 +20,7 @@ def find_config_file():
 
 class ConfigBoss():
 
-    def __init__(self), config_file=None:
+    def __init__(self, config_file=None):
         self._config_file = config_file
 
         if self._config_file is None:
