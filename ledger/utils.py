@@ -33,9 +33,8 @@ class ConfigBoss():
     def _parse_config_file(self):
 
         self._parser = configparser.ConfigParser()
-        return self._parser.read(self._config_file)
-
-
+        self._parser.read(self._config_file)
+        return self._parser
 
 
 def check_id(api, taskid):
