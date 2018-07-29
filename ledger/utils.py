@@ -22,7 +22,8 @@ class ConfigBoss():
         # Not checking if exists because ConfigParser handles this gracefully
         # Standard allowing for hierarchal config overrides
         for item in self._config_files:
-            self._parser.read(item)
+            if item:
+                self._parser.read(item)
         # Return the parser because ConfigParser object actually contains the config data 
         return self._parser
 
