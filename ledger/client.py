@@ -20,8 +20,8 @@ DEFAULT_CONFIG = { api: "http://localhost:9000",
 
 if 'client' in configboss.config_data.sections():
     for k, v in DEFAULT_CONFIG:
-        if k in configboss.config_data['client']
-            if k == 'debug'
+        if k in configboss.config_data['client']:
+            if k == 'debug':
                 f_config[k] = configboss.config_data['client'].getboolean(k)
             else:
                 f_config[k] = v
