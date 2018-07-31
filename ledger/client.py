@@ -19,7 +19,7 @@ DEFAULT_CONFIG = { "api": "http://localhost:9000",
 }
 
 if 'client' in configboss.config_data.sections():
-    for k, v in DEFAULT_CONFIG:
+    for k, v in DEFAULT_CONFIG.items():
         if k in configboss.config_data['client']:
             if k == 'debug':
                 f_config[k] = configboss.config_data['client'].getboolean(k)
@@ -71,7 +71,7 @@ def cli():
 @cli.command(name='config')
 def config_dump():
     """Dump configuration"""
-    for k, v in f_config:
+    for k, v in f_config.items():
         display.print("{0}={1}".format(k, v))
 
 
