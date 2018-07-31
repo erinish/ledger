@@ -114,7 +114,7 @@ def list_task(long, days, status, zefault):
         filterkwargs['status'] = 'open'
     try:
         mytasks = req.get("{}/task".format(API)).json()
-    except requests.exceptions.ConnectionError as exc:
+    except req.exceptions.ConnectionError as exc:
         Display.print("Error: could not connect to server. Is it running?")
         sys.exit(1)
     tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
