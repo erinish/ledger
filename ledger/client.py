@@ -13,9 +13,9 @@ from ledger.utils import check_id, filter_tasks, ConfigBoss
 configboss = ConfigBoss()
 f_config = {}
 
-DEFAULT_CONFIG = { api: "http://localhost:9000",
-                   callback_plugin: "yaml",
-                   debug: False
+DEFAULT_CONFIG = { "api": "http://localhost:9000",
+                   "callback_plugin": "yaml",
+                   "debug": False
 }
 
 if 'client' in configboss.config_data.sections():
