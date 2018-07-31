@@ -54,7 +54,7 @@ class Display():
         elif self.callback_plugin == 'yaml':
             print(yaml.dump(yaml.load(json.dumps(json_msg)), default_flow_style=False))
 
-    def text(self, msg):
+    def print(self, msg):
         print(msg)
     
     def debug(self, msg):
@@ -115,7 +115,7 @@ def list_task(long, days, status, zefault):
     try:
         mytasks = req.get("{}/task".format(API)).json()
     except req.exceptions.ConnectionError as exc:
-        Display.text("Error: could not connect to server. Is it running?")
+        display.print("Error: could not connect to server. Is it running?")
         sys.exit(1)
     tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
     print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
