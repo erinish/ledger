@@ -10,14 +10,31 @@ import click
 import arrow
 from ledger.utils import check_id, filter_tasks, ConfigBoss
 
-config = ConfigBoss()
+configboss = ConfigBoss()
+f_config = {}
 
+DEFAULT_CONFIG = { api: "http://localhost:9000",
+                   callback_plugin: "yaml"
+                   debug: False
+}
 
-CALLBACK_PLUGIN = 'yaml'
+if 'client' in configboss.config_data.sections():
+    for k, v in DEFAULT_CONFIG:
+        if k in configboss.config_data['client']
+            if k == 'debug'
+                f_config[k] = configboss.config_data['client'].getboolean(k)
+            else:
+                f_config[k] = v
+        else:
+            f_config[k] = DEFAULT_CONFIG[k]
+else:
+    f_config = DEFAULT_CONFIG
+
+API = f_config['api']
+CALLBACK_PLUGIN = f_config['callback_plugin']
+
 if CALLBACK_PLUGIN == 'yaml':
     import yaml
-
-API = 'http://localhost:9000'
 
 
 class Display():
@@ -38,6 +55,10 @@ class Display():
 
     def print(self, msg):
         print(msg)
+    
+    def debug(self, msg):
+        if DEBUG:
+            print(msg)
 
 display = Display(CALLBACK_PLUGIN)
 
