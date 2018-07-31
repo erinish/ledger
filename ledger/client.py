@@ -71,7 +71,7 @@ def cli():
 @cli.command(name='config')
 def config_dump():
     """Dump configuration"""
-    for k, v in config.config_data['defaults'].items():
+    for k, v in f_config:
         display.print("{0}={1}".format(k, v))
 
 
