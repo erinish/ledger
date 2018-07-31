@@ -4,6 +4,7 @@
 Quick task logging
 """
 import re
+import sys
 import json
 import requests as req
 import click
@@ -111,7 +112,11 @@ def list_task(long, days, status, zefault):
         filterkwargs['status'] = status
     if zefault:
         filterkwargs['status'] = 'open'
-    mytasks = req.get("{}/task".format(API)).json()
+    try:
+        mytasks = req.get("{}/task".format(API)).json()
+    except requests.exceptions.ConnectionError as exc:
+        Display.print("Error: could not connect to server. Is it running?")
+        sys.exit(1)
     tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
     print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
     for entry in tasksbytime:
