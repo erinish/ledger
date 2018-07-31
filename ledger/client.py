@@ -14,7 +14,7 @@ configboss = ConfigBoss()
 f_config = {}
 
 DEFAULT_CONFIG = { api: "http://localhost:9000",
-                   callback_plugin: "yaml"
+                   callback_plugin: "yaml",
                    debug: False
 }
 
