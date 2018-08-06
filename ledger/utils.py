@@ -3,37 +3,28 @@ import requests as req
 import configparser
 from pathlib import Path
 
-def find_config_file():
-    '''
-    Locate a config file
-    '''
-    user_home_conf = Path.home() / '.ledger' / 'ledger.conf'
-    system_default_conf = Path('/etc/ledger/ledger.conf')
-
-    if user_home_conf.is_file():
-        return user_home_conf
-    elif system_default_conf.is_file():
-        return system_default_conf
-    else:
-        raise FileNotFoundError('No configuration file found. Bad Installation?')
-
 
 class ConfigBoss():
 
     def __init__(self, config_file=None):
         self._config_file = config_file
+        self._user_home_conf = Path.home() / '.ledger' / 'ledger.conf'
+        self._system_default_conf = Path('/etc/ledger/ledger.conf')
+        self._package_default_conf = Path('ledger.conf')
+        self._config_files = [self._package_default_conf, self._system_default_conf, self._user_home_conf, self._config_file]
 
-        if self._config_file is None:
-            self._config_file = find_config_file()
-    
-        if self._config_file:
-            self.config_data = self._parse_config_file()
+        self.config_data = self._parse_config_file()
     
 
     def _parse_config_file(self):
 
         self._parser = configparser.ConfigParser()
-        self._parser.read(self._config_file)
+        # Not checking if exists because ConfigParser handles this gracefully
+        # Standard allowing for hierarchal config overrides
+        for item in self._config_files:
+            if item:
+                self._parser.read(item)
+        # Return the parser because ConfigParser object actually contains the config data 
         return self._parser
 
 

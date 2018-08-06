@@ -4,20 +4,38 @@
 Quick task logging
 """
 import re
+import sys
 import json
 import requests as req
 import click
 import arrow
 from ledger.utils import check_id, filter_tasks, ConfigBoss
 
-config = ConfigBoss()
+configboss = ConfigBoss()
+f_config = {}
 
+DEFAULT_CONFIG = { "api": "http://localhost:9000",
+                   "callback_plugin": "yaml",
+                   "debug": False
+}
 
-CALLBACK_PLUGIN = 'yaml'
+if 'client' in configboss.config_data.sections():
+    for k, v in DEFAULT_CONFIG.items():
+        if k in configboss.config_data['client']:
+            if k == 'debug':
+                f_config[k] = configboss.config_data['client'].getboolean(k)
+            else:
+                f_config[k] = v
+        else:
+            f_config[k] = DEFAULT_CONFIG[k]
+else:
+    f_config = DEFAULT_CONFIG
+
+API = f_config['api']
+CALLBACK_PLUGIN = f_config['callback_plugin']
+
 if CALLBACK_PLUGIN == 'yaml':
     import yaml
-
-API = 'http://localhost:9000'
 
 
 class Display():
@@ -38,6 +56,10 @@ class Display():
 
     def print(self, msg):
         print(msg)
+    
+    def debug(self, msg):
+        if DEBUG:
+            print(msg)
 
 display = Display(CALLBACK_PLUGIN)
 
@@ -49,7 +71,8 @@ def cli():
 
 @cli.command(name='config')
 def config_dump():
-    for k, v in config.config_data['defaults'].items():
+    """Dump configuration"""
+    for k, v in f_config.items():
         display.print("{0}={1}".format(k, v))
 
 
@@ -89,7 +112,11 @@ def list_task(long, days, status, zefault):
         filterkwargs['status'] = status
     if zefault:
         filterkwargs['status'] = 'open'
-    mytasks = req.get("{}/task".format(API)).json()
+    try:
+        mytasks = req.get("{}/task".format(API)).json()
+    except req.exceptions.ConnectionError as exc:
+        display.print("Error: could not connect to server. Is it running?")
+        sys.exit(1)
     tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
     print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
     for entry in tasksbytime:
