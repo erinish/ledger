@@ -56,7 +56,7 @@ class Display():
 
     def print(self, msg):
         print(msg)
-    
+
     def debug(self, msg):
         if DEBUG:
             print(msg)
@@ -83,11 +83,11 @@ def report_tasks(days, email):
     """Produce a report of completed tasks"""
     filterkwargs = {'status': 'closed'}
     if days:
-        filterkwargs['days'] = arrow.now().timestamp - (int(days) * 86400)
+        filterkwargs['close_time'] = arrow.now().timestamp - (int(days) * 86400)
     else:
-        filterkwargs['days'] = arrow.now().timestamp - (7 * 86400)
+        filterkwargs['close_time'] = arrow.now().timestamp - (7 * 86400)
     mytasks = req.get("{}/task".format(API)).json()
-    tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
+    tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['close_time'], reverse=True)
     for entry in tasksbytime:
         if filter_tasks(entry[1], **filterkwargs):
             if email:
@@ -101,15 +101,15 @@ def report_tasks(days, email):
 @cli.command(name='ls')
 @click.option('-l', '--long', required=False, is_flag=True)
 @click.option('-d', '--days', help="number of days before now")
-@click.option('-s', '--status')
+@click.option('-c', '--closed', required=False, is_flag=True)
 @click.option('-z', '--zefault', required=False, is_flag=True)
 def list_task(long, days, status, zefault):
     """List all tasks"""
     filterkwargs = {}
     if days and not zefault:
         filterkwargs['days'] = arrow.now().timestamp - (int(days) * 86400)
-    if status and not zefault:
-        filterkwargs['status'] = status
+    if closed and not zefault:
+        filterkwargs['status'] = 'closed'
     if zefault:
         filterkwargs['status'] = 'open'
     try:
@@ -117,7 +117,10 @@ def list_task(long, days, status, zefault):
     except req.exceptions.ConnectionError as exc:
         display.print("Error: could not connect to server. Is it running?")
         sys.exit(1)
-    tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
+    if closed:
+        tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['close_time'], reverse=True)
+    else:
+        tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
     print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
     for entry in tasksbytime:
         if filter_tasks(entry[1], **filterkwargs):
@@ -127,36 +130,29 @@ def list_task(long, days, status, zefault):
                 digest = entry[0][:6] + ".."
             if status == 'closed':
                 humantime = arrow.get(entry[1]['close_time']).to('local').format('MM/DD/YY HH:mm')
-                print("{:>8} {:<14} {:>6} {}".format(digest,
-                                                     humantime,
-                                                     entry[1]['status'],
-                                                     entry[1]['task']))
-
+                print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task'])) 
             else:
                 humantime = arrow.get(entry[1]['time']).to('local').format('MM/DD/YY HH:mm')
-                print("{:>8} {:<14} {:>6} {}".format(digest,
-                                                     humantime,
-                                                     entry[1]['status'],
-                                                     entry[1]['task']))
+                print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task']))
 
 
 @cli.command(name='add')
 @click.argument('msg', nargs=-1)
-@click.option('-s', '--status', type=click.STRING)
+@click.option('-c', '--closed', required=False, is_flag=True)
 def add_task(msg, status):
     """Add a new task"""
-    if not status:
+    if closed:
+        status = 'closed'
+    else:
         status = 'open'
     msg = " ".join(msg)
     stamp = str(arrow.now().timestamp)
     headers = {"Content-Type": "application/json"}
-    r = req.put("{}/task".format(API),
-                data=json.dumps({'task': msg,
-                                 'time': stamp,
-                                 'close_time': None,
-                                 'status': status
-                                 }),
-                headers=headers)
+    if status == 'closed':
+        close_time = stamp
+    else:
+        close_time = None
+    r = req.put("{}/task".format(API), data=json.dumps({'task': msg, 'time': stamp, 'close_time': close_time, 'status': status}), headers=headers)
     display.dump(r.json())
 
 

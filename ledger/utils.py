@@ -51,6 +51,8 @@ def filter_tasks(task, **kwargs):
         for key, value in kwargs.items():
             if key == 'days':
                 tests.append(int(task['time']) > value)
+            if key == 'close_time':
+                tests.append(int(task['close_time']) > value)
             if key == 'status':
                 tests.append(task['status'] == value)
     return all(tests)
