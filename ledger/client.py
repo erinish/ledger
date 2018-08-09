@@ -139,7 +139,7 @@ def list_task(long, days, closed, zefault):
 @cli.command(name='add')
 @click.argument('msg', nargs=-1)
 @click.option('-c', '--closed', required=False, is_flag=True)
-def add_task(msg, status):
+def add_task(msg, closed):
     """Add a new task"""
     if closed:
         status = 'closed'
