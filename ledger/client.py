@@ -103,7 +103,7 @@ def report_tasks(days, email):
 @click.option('-d', '--days', help="number of days before now")
 @click.option('-c', '--closed', required=False, is_flag=True)
 @click.option('-z', '--zefault', required=False, is_flag=True)
-def list_task(long, days, status, zefault):
+def list_task(long, days, closed, zefault):
     """List all tasks"""
     filterkwargs = {}
     if days and not zefault:
