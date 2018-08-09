@@ -128,7 +128,7 @@ def list_task(long, days, closed, zefault):
                 digest = entry[0]
             else:
                 digest = entry[0][:6] + ".."
-            if status == 'closed':
+            if closed:
                 humantime = arrow.get(entry[1]['close_time']).to('local').format('MM/DD/YY HH:mm')
                 print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task'])) 
             else:
