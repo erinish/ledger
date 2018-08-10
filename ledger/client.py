@@ -182,20 +182,20 @@ def main():
 
     # LS Parser
     ls_parser = subparsers.add_parser('ls')
-    ls_parser.add_argument(['-c', '--closed'], action='store_true')
-    ls_parser.add_argument(['-l', '--long'], action='store_true')
-    ls_parser.add_argument(['-d', '--days'], nargs=1, type=int)
+    ls_parser.add_argument('-c', '--closed', action='store_true')
+    ls_parser.add_argument('-l', '--long', action='store_true')
+    ls_parser.add_argument('-d', '--days', nargs=1, type=int)
     ls_parser.set_defaults(func=list_task)
 
     # Report Parser
     report_parser = subparsers.add_parser('report')
     report_parser.add_argument('--show-dates', action='store_true')
-    report_parser.add_argument(['-d', '--days'], nargs=1, type=int)
+    report_parser.add_argument('-d', '--days', nargs=1, type=int)
     report_parser.set_defaults(func=report_tasks)
 
     # Add Parser
     add_parser = subparsers.add_parser('add')
-    add_parser.add_argument(['-c', '--closed'], action='store_true')
+    add_parser.add_argument('-c', '--closed', action='store_true')
     add_parser.add_argument('msg', nargs=argparse.REMAINDER)
     add_parser.set_defaults(func=add_task)
 
