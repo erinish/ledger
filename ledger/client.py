@@ -83,7 +83,7 @@ def report_tasks(args):
     tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['close_time'], reverse=True)
     for entry in tasksbytime:
         if filter_tasks(entry[1], **filterkwargs):
-            if not args.showdates:
+            if not args['show-dates']:
                 print("\u2022 {}".format(entry[1]['task']))
             else:
                 humantime = arrow.get(entry[1]['time']).to('local').format('MM/DD')
@@ -119,7 +119,7 @@ def list_task(args):
     for entry in tasksbytime:
         if filter_tasks(entry[1], **filterkwargs):
             # FIXME: overwriting a builtin
-            if long:
+            if args.long:
                 digest = entry[0]
             else:
                 digest = entry[0][:6] + ".."
@@ -152,7 +152,7 @@ def add_task(args):
 
 def del_task(args):
     """Remove a task"""
-    uri = check_id(API, args.partialhash)
+    uri = check_id(API, args.hash)
     if uri:
         r = req.delete("{}/task/{}".format(API, uri))
         display.dump(r.json())
@@ -161,7 +161,7 @@ def del_task(args):
 def close_task(args):
     """close a task with an optional comment"""
     headers = {"Content-Type": "application/json"}
-    uri = check_id(API, args.partialhash)
+    uri = check_id(API, args.hash)
     if uri:
         stamp = int(arrow.now().timestamp)
         r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed', 'close_time': stamp}), headers=headers)
@@ -182,32 +182,32 @@ def main():
 
     # LS Parser
     ls_parser = subparsers.add_parser('ls')
-    ls_parser.add_argument(['-c', '--closed'], dest='closed', action='store_true')
-    ls_parser.add_argument(['-l', '--long'], dest='longhash', action='store_true')
-    ls_parser.add_argument(['-d', '--days'], dest='days', nargs=1, type=int)
+    ls_parser.add_argument(['-c', '--closed'], action='store_true')
+    ls_parser.add_argument(['-l', '--long'], action='store_true')
+    ls_parser.add_argument(['-d', '--days'], nargs=1, type=int)
     ls_parser.set_defaults(func=list_task)
 
     # Report Parser
     report_parser = subparsers.add_parser('report')
-    report_parser.add_argument('--show-dates', dest='showdates', action='store_true')
-    report_parser.add_argument(['-d', '--days'], dest='days', nargs=1, type=int)
+    report_parser.add_argument('--show-dates', action='store_true')
+    report_parser.add_argument(['-d', '--days'], nargs=1, type=int)
     report_parser.set_defaults(func=report_tasks)
 
     # Add Parser
     add_parser = subparsers.add_parser('add')
-    add_parser.add_argument(['-c', '--closed'], dest='closed', action='store_true')
-    add_parser.add_argument('msg', dest='msg', nargs=argparse.REMAINDER)
+    add_parser.add_argument(['-c', '--closed'], action='store_true')
+    add_parser.add_argument('msg', nargs=argparse.REMAINDER)
     add_parser.set_defaults(func=add_task)
 
     # RM Parser
     rm_parser = subparsers.add_parser('rm')
-    rm_parser.add_argument('hash', dest='partialhash', nargs=argparse.REMAINDER)
+    rm_parser.add_argument('hash', nargs=argparse.REMAINDER)
     rm_parser.set_defaults(func=del_task)
 
     # Close Parser
     close_parser = subparsers.add_parser('close')
-    close_parser.add_argument('hash', dest='partialhash', nargs=argparse.REMAINDER)
-    close_parser.add_argument('msg', dest='msg', nargs=argparse.REMAINDER)
+    close_parser.add_argument('hash', nargs=argparse.REMAINDER)
+    close_parser.add_argument('msg', nargs=argparse.REMAINDER)
     close_parser.set_defaults(func=close_task)
 
     args = parser.parse_args()
