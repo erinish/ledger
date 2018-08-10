@@ -3,11 +3,11 @@
 
 Quick task logging
 """
+import argparse
 import re
 import sys
 import json
 import requests as req
-import click
 import arrow
 from ledger.utils import check_id, filter_tasks, ConfigBoss
 from stain import Stain
@@ -66,25 +66,16 @@ class Display():
 display = Display(CALLBACK_PLUGIN)
 
 
-@click.group()
-def cli():
-    pass
-
-
-@cli.command(name='config')
 def config_dump():
     """Dump configuration"""
     for k, v in f_config.items():
         display.print("{0}={1}".format(k, v))
 
 
-@cli.command(name='report')
-@click.option('-d', '--days', type=click.INT)
-@click.option('-e', '--email', is_flag=True)
-def report_tasks(days, email):
+def report_tasks(args):
     """Produce a report of completed tasks"""
     filterkwargs = {'status': 'closed'}
-    if days:
+    if args.days:
         filterkwargs['close_time'] = arrow.now().timestamp - (int(days) * 86400)
     else:
         filterkwargs['close_time'] = arrow.now().timestamp - (7 * 86400)
@@ -92,27 +83,22 @@ def report_tasks(days, email):
     tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['close_time'], reverse=True)
     for entry in tasksbytime:
         if filter_tasks(entry[1], **filterkwargs):
-            if email:
+            if not args.showdates:
                 print("\u2022 {}".format(entry[1]['task']))
-                pass
             else:
                 humantime = arrow.get(entry[1]['time']).to('local').format('MM/DD')
                 print("{} {}".format(humantime, entry[1]['task']))
 
 
-@cli.command(name='ls')
-@click.option('-l', '--long', required=False, is_flag=True)
-@click.option('-d', '--days', help="number of days before now")
-@click.option('-c', '--closed', required=False, is_flag=True)
-def list_task(long, days, closed):
+def list_task(args):
     """List all tasks"""
     filterkwargs = {}
-    if days and not closed:
+    if args.days and not args.closed:
         filterkwargs['days'] = arrow.now().timestamp - (int(days) * 86400)
-    elif days:
+    elif args.days:
         filterkwargs['close_time'] = arrow.now().timestamp - (int(days) * 86400)
 
-    if closed:
+    if args.closed:
         filterkwargs['status'] = 'closed'
 
     try:
@@ -120,10 +106,10 @@ def list_task(long, days, closed):
     except req.exceptions.ConnectionError as exc:
         display.print("Error: could not connect to server. Is it running?")
         sys.exit(1)
-    
+
     # On specific runs for closed tasks, reverse sort by time closed
     # but if open tasks or all tasks, sort by time opened
-    if closed:
+    if args.closed:
         tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['close_time'], reverse=True)
     else:
         tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
@@ -132,7 +118,7 @@ def list_task(long, days, closed):
     display.print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
     for entry in tasksbytime:
         if filter_tasks(entry[1], **filterkwargs):
-            #FIXME: overwriting a builtin
+            # FIXME: overwriting a builtin
             if long:
                 digest = entry[0]
             else:
@@ -140,23 +126,20 @@ def list_task(long, days, closed):
             if entry[1]['status'] == 'closed':
                 humantime = arrow.get(entry[1]['close_time']).to('local').format('MM/DD/YY HH:mm')
                 with stain.dim():
-                    display.print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task'])) 
+                    display.print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task']))
             else:
                 humantime = arrow.get(entry[1]['time']).to('local').format('MM/DD/YY HH:mm')
                 with stain.bold():
                     display.print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task']))
 
 
-@cli.command(name='add')
-@click.argument('msg', nargs=-1)
-@click.option('-c', '--closed', required=False, is_flag=True)
-def add_task(msg, closed):
+def add_task(args):
     """Add a new task"""
-    if closed:
+    if args.closed:
         status = 'closed'
     else:
         status = 'open'
-    msg = " ".join(msg)
+    msg = " ".join(args.msg)
     stamp = int(arrow.now().timestamp)
     headers = {"Content-Type": "application/json"}
     if status == 'closed':
@@ -167,28 +150,68 @@ def add_task(msg, closed):
     display.dump(r.json())
 
 
-@cli.command(name='rm')
-@click.argument('msg', type=click.STRING)
-def del_task(msg):
+def del_task(args):
     """Remove a task"""
-    uri = check_id(API, msg)
+    uri = check_id(API, args.partialhash)
     if uri:
         r = req.delete("{}/task/{}".format(API, uri))
         display.dump(r.json())
 
 
-@cli.command(name='close')
-@click.argument('tsk')
-@click.argument('msg', nargs=-1)
-def close_task(tsk, msg):
+def close_task(args):
     """close a task with an optional comment"""
     headers = {"Content-Type": "application/json"}
-    uri = check_id(API, tsk)
+    uri = check_id(API, args.partialhash)
     if uri:
         stamp = int(arrow.now().timestamp)
         r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed', 'close_time': stamp}), headers=headers)
         display.dump(r.json())
 
 
+def main():
+    '''
+    Logic and CLI handling
+    '''
+
+    parser = argparse.ArgumentParser(description='Ledger CLI')
+    subparsers = parser.add_subparsers()
+
+    # Conf Parser
+    conf_parser = subparsers.add_parser('config')
+    conf_parser.set_defaults(func=config_dump)
+
+    # LS Parser
+    ls_parser = subparsers.add_parser('ls')
+    ls_parser.add_argument(['-c', '--closed'], dest='closed', action='store_true')
+    ls_parser.add_argument(['-l', '--long'], dest='longhash', action='store_true')
+    ls_parser.add_argument(['-d', '--days'], dest='days', nargs=1, type=int)
+    ls_parser.set_defaults(func=list_task)
+
+    # Report Parser
+    report_parser = subparsers.add_parser('report')
+    report_parser.add_argument('--show-dates', dest='showdates', action='store_true')
+    report_parser.add_argument(['-d', '--days'], dest='days', nargs=1, type=int)
+    report_parser.set_defaults(func=report_tasks)
+
+    # Add Parser
+    add_parser = subparsers.add_parser('add')
+    add_parser.add_argument(['-c', '--closed'], dest='closed', action='store_true')
+    add_parser.add_argument('msg', dest='msg', nargs=argparse.REMAINDER)
+    add_parser.set_defaults(func=add_task)
+
+    # RM Parser
+    rm_parser = subparsers.add_parser('rm')
+    rm_parser.add_argument('hash', dest='partialhash', nargs=argparse.REMAINDER)
+    rm_parser.set_defaults(func=del_task)
+
+    # Close Parser
+    close_parser = subparsers.add_parser('close')
+    close_parser.add_argument('hash', dest='partialhash', nargs=argparse.REMAINDER)
+    close_parser.add_argument('msg', dest='msg', nargs=argparse.REMAINDER)
+    close_parser.set_defaults(func=close_task)
+
+    args = parser.parse_args()
+
+
 if __name__ == '__main__':
-    cli()
+    main()

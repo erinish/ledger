@@ -12,7 +12,7 @@ from flask import Flask, request, render_template
 from flask_restful import Resource, Api, fields, marshal_with
 
 MYDIR = Path.home() / '.ledger'
-TASKFILE = MYDIR / 'tasks.json' 
+TASKFILE = MYDIR / 'tasks.json'
 
 app = Flask('ledger')
 api = Api(app)
