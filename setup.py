@@ -96,7 +96,7 @@ setup(
     url=URL,
     packages=find_packages('ledger', exclude=('tests',)),
     entry_points={
-        'console_scripts': ['ledger=ledger.client:cli'],
+        'console_scripts': ['ledger=ledger.client:main'],
     },
     install_requires=REQUIRED,
     extras_require=EXTRAS,
