@@ -132,11 +132,11 @@ def list_task(long, days, closed, zefault):
                 digest = entry[0][:6] + ".."
             if closed:
                 humantime = arrow.get(entry[1]['close_time']).to('local').format('MM/DD/YY HH:mm')
-                with stain.DIM():
+                with stain.dim():
                     display.print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task'])) 
             else:
                 humantime = arrow.get(entry[1]['time']).to('local').format('MM/DD/YY HH:mm')
-                with stain.BOLD():
+                with stain.bold():
                     display.print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task']))
 
 
