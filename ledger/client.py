@@ -181,33 +181,32 @@ def main():
     conf_parser.set_defaults(func=config_dump)
 
     # LS Parser
-    ls_parser = subparsers.add_parser('ls')
-    ls_parser.add_argument('-c', '--closed', action='store_true')
-    ls_parser.add_argument('-l', '--long', action='store_true')
-    ls_parser.add_argument('-d', '--days', nargs=1, type=int)
+    ls_parser = subparsers.add_parser('ls', help='list tasks')
+    ls_parser.add_argument('-c', '--closed', action='store_true', help='show only closed tasks')
+    ls_parser.add_argument('-l', '--long', action='store_true', help="don't shorten hashes")
+    ls_parser.add_argument('-d', '--days', nargs=1, type=int, help='limit result to last N days')
     ls_parser.set_defaults(func=list_task)
 
     # Report Parser
-    report_parser = subparsers.add_parser('report')
-    report_parser.add_argument('--show-dates', action='store_true')
-    report_parser.add_argument('-d', '--days', nargs=1, type=int)
+    report_parser = subparsers.add_parser('report', help='report formatting')
+    report_parser.add_argument('--show-dates', action='store_true', help='show date instead of bullet')
+    report_parser.add_argument('-d', '--days', nargs=1, type=int, help='limit result to last N days')
     report_parser.set_defaults(func=report_tasks)
 
     # Add Parser
-    add_parser = subparsers.add_parser('add')
-    add_parser.add_argument('-c', '--closed', action='store_true')
+    add_parser = subparsers.add_parser('add', help='add a task')
+    add_parser.add_argument('-c', '--closed', action='store_true', help='automatically close a new task')
     add_parser.add_argument('msg', nargs=argparse.REMAINDER)
     add_parser.set_defaults(func=add_task)
 
     # RM Parser
-    rm_parser = subparsers.add_parser('rm')
-    rm_parser.add_argument('hash', nargs=argparse.REMAINDER)
+    rm_parser = subparsers.add_parser('rm', help='remove a task (destructive)')
+    rm_parser.add_argument('hash', nargs=1, help='partial or full hash of the task')
     rm_parser.set_defaults(func=del_task)
 
     # Close Parser
     close_parser = subparsers.add_parser('close')
-    close_parser.add_argument('hash', nargs=argparse.REMAINDER)
-    close_parser.add_argument('msg', nargs=argparse.REMAINDER)
+    close_parser.add_argument('hash', nargs=1, help='partial or full hash of the task')
     close_parser.set_defaults(func=close_task)
 
     args = parser.parse_args()
