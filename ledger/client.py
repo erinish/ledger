@@ -109,7 +109,7 @@ def list_task(long, days, closed):
     filterkwargs = {}
     if days and not closed:
         filterkwargs['days'] = arrow.now().timestamp - (int(days) * 86400)
-    else:
+    elif days:
         filterkwargs['close_time'] = arrow.now().timestamp - (int(days) * 86400)
 
     if closed:
