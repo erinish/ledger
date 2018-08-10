@@ -211,6 +211,7 @@ def main():
     close_parser.set_defaults(func=close_task)
 
     args = parser.parse_args()
+    args.func(args)
 
 
 if __name__ == '__main__':
