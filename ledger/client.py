@@ -66,7 +66,7 @@ class Display():
 display = Display(CALLBACK_PLUGIN)
 
 
-def config_dump():
+def config_dump(args):
     """Dump configuration"""
     for k, v in f_config.items():
         display.print("{0}={1}".format(k, v))
