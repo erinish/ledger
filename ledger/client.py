@@ -174,7 +174,7 @@ def main():
     '''
 
     parser = argparse.ArgumentParser(description='Ledger CLI')
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(metavar='subcommand')
 
     # Conf Parser
     conf_parser = subparsers.add_parser('config')
