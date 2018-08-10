@@ -1,7 +1,11 @@
 import re
 import requests as req
 import configparser
+from configparser import MissingSectionHeaderError
 from pathlib import Path
+from stain import Stain
+
+stain = Stain()
 
 
 class ConfigBoss():
@@ -14,7 +18,6 @@ class ConfigBoss():
         self._config_files = [self._package_default_conf, self._system_default_conf, self._user_home_conf, self._config_file]
 
         self.config_data = self._parse_config_file()
-    
 
     def _parse_config_file(self):
 
@@ -23,8 +26,11 @@ class ConfigBoss():
         # Standard allowing for hierarchal config overrides
         for item in self._config_files:
             if item:
-                self._parser.read(item)
-        # Return the parser because ConfigParser object actually contains the config data 
+                try:
+                    self._parser.read(item)
+                except MissingSectionHeaderError as exc:
+                    print(stain.YELLOW + "[Warning]" + stain.RESET + ": {} is an invalid config file. line: {}, {}".format(exc.filename.name, exc.lineno, exc.line))
+        # Return the parser because ConfigParser object actually contains the config data
         return self._parser
 
 
