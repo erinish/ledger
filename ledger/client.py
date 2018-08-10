@@ -162,7 +162,7 @@ def add_task(msg, closed):
     if status == 'closed':
         close_time = stamp
     else:
-        close_time = None
+        close_time = 0
     r = req.put("{}/task".format(API), data=json.dumps({'task': msg, 'time': stamp, 'close_time': close_time, 'status': status}), headers=headers)
     display.dump(r.json())
 
