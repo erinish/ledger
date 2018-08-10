@@ -185,7 +185,7 @@ def close_task(tsk, msg):
     headers = {"Content-Type": "application/json"}
     uri = check_id(API, tsk)
     if uri:
-        stamp = str(arrow.now().timestamp)
+        stamp = int(arrow.now().timestamp)
         r = req.put("{}/task/{}".format(API, uri), data=json.dumps({'status': 'closed', 'close_time': stamp}), headers=headers)
         display.dump(r.json())
 
