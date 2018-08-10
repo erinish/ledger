@@ -10,8 +10,10 @@ import requests as req
 import click
 import arrow
 from ledger.utils import check_id, filter_tasks, ConfigBoss
+from stain import Stain
 
 configboss = ConfigBoss()
+stain = Stain()
 f_config = {}
 
 DEFAULT_CONFIG = {"api": "http://localhost:9000",
@@ -121,7 +123,7 @@ def list_task(long, days, closed, zefault):
         tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['close_time'], reverse=True)
     else:
         tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
-    print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
+    display.print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
     for entry in tasksbytime:
         if filter_tasks(entry[1], **filterkwargs):
             if long:
@@ -130,10 +132,12 @@ def list_task(long, days, closed, zefault):
                 digest = entry[0][:6] + ".."
             if closed:
                 humantime = arrow.get(entry[1]['close_time']).to('local').format('MM/DD/YY HH:mm')
-                print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task'])) 
+                with stain.DIM():
+                    display.print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task'])) 
             else:
                 humantime = arrow.get(entry[1]['time']).to('local').format('MM/DD/YY HH:mm')
-                print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task']))
+                with stain.BOLD():
+                    display.print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task']))
 
 
 @cli.command(name='add')
