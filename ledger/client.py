@@ -157,7 +157,7 @@ def add_task(msg, closed):
     else:
         status = 'open'
     msg = " ".join(msg)
-    stamp = str(arrow.now().timestamp)
+    stamp = int(arrow.now().timestamp)
     headers = {"Content-Type": "application/json"}
     if status == 'closed':
         close_time = stamp
