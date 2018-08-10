@@ -104,33 +104,40 @@ def report_tasks(days, email):
 @click.option('-l', '--long', required=False, is_flag=True)
 @click.option('-d', '--days', help="number of days before now")
 @click.option('-c', '--closed', required=False, is_flag=True)
-@click.option('-z', '--zefault', required=False, is_flag=True)
-def list_task(long, days, closed, zefault):
+def list_task(long, days, closed):
     """List all tasks"""
     filterkwargs = {}
-    if days and not zefault:
+    if days and not closed:
         filterkwargs['days'] = arrow.now().timestamp - (int(days) * 86400)
-    if closed and not zefault:
+    else:
+        filterkwargs['close_time'] = arrow.now().timestamp - (int(days) * 86400)
+
+    if closed:
         filterkwargs['status'] = 'closed'
-    if zefault:
-        filterkwargs['status'] = 'open'
+
     try:
         mytasks = req.get("{}/task".format(API)).json()
     except req.exceptions.ConnectionError as exc:
         display.print("Error: could not connect to server. Is it running?")
         sys.exit(1)
+    
+    # On specific runs for closed tasks, reverse sort by time closed
+    # but if open tasks or all tasks, sort by time opened
     if closed:
         tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['close_time'], reverse=True)
     else:
         tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
+
+    # Print the header
     display.print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
     for entry in tasksbytime:
         if filter_tasks(entry[1], **filterkwargs):
+            #FIXME: overwriting a builtin
             if long:
                 digest = entry[0]
             else:
                 digest = entry[0][:6] + ".."
-            if closed:
+            if entry[1]['status'] == 'closed':
                 humantime = arrow.get(entry[1]['close_time']).to('local').format('MM/DD/YY HH:mm')
                 with stain.dim():
                     display.print("{:>8} {:<14} {:>6} {}".format(digest, humantime, entry[1]['status'], entry[1]['task'])) 
