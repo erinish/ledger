@@ -205,7 +205,7 @@ def main():
     rm_parser.set_defaults(func=del_task)
 
     # Close Parser
-    close_parser = subparsers.add_parser('close')
+    close_parser = subparsers.add_parser('close', help='close a task')
     close_parser.add_argument('hash', nargs=1, help='partial or full hash of the task')
     close_parser.set_defaults(func=close_task)
 
