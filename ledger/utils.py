@@ -32,7 +32,7 @@ class ConfigBoss():
                     self._parser.read(item)
                     for section in self._parser.sections():
                         for k, v in self._parser[section].items():
-                            self._tmp_config[section][k] = (v, item.name)
+                            self._tmp_config[section][k] = (v, str(item))
 
                 except MissingSectionHeaderError as exc:
                     print(stain.YELLOW + "[Warning]" + stain.RESET + ": {} is an invalid config file. line: {}, {}".format(exc.filename.name, exc.lineno, exc.line))
