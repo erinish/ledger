@@ -14,7 +14,7 @@ class ConfigBoss():
         try:
             self._config_file = Path(config_file)
         except TypeError:
-            pass
+            self._config_file = None
         self._user_home_conf = Path.home() / '.ledger' / 'ledger.conf'
         self._system_default_conf = Path('/etc/ledger/ledger.conf')
         self._package_default_conf = Path('ledger.conf')
