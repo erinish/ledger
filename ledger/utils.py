@@ -11,7 +11,8 @@ stain = Stain()
 class ConfigBoss():
 
     def __init__(self, config_file=None):
-        self._config_file = config_file
+        try:
+            self._config_file = Path(config_file)
         self._user_home_conf = Path.home() / '.ledger' / 'ledger.conf'
         self._system_default_conf = Path('/etc/ledger/ledger.conf')
         self._package_default_conf = Path('ledger.conf')
@@ -21,14 +22,14 @@ class ConfigBoss():
 
     def _parse_config_file(self):
 
-        self._parser = configparser.ConfigParser()
         self._tmp_config = {}
         self._tmp_config['client'] = {}
         self._tmp_config['server'] = {}
-        # Standard allowing for hierarchal config overrides
         for item in self._config_files:
-            if item:
+            if item.is_file():
                 try:
+                    # reset parser each time so we can track sources
+                    self._parser = configparser.ConfigParser()
                     self._parser.read(item)
                     for section in self._parser.sections():
                         for k, v in self._parser[section].items():
@@ -39,7 +40,6 @@ class ConfigBoss():
                 except KeyError as exc:
                     print(stain.RED + "[Error]" + stain.RESET + ": {} is an invalid section.".format(exc))
 
-        # Return the parser because ConfigParser object actually contains the config data
         return self._tmp_config
     
     @staticmethod
