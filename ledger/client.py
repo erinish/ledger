@@ -18,9 +18,9 @@ f_config = {}
 
 for k, v in configboss.config_data['client'].items():
     if k == 'debug':
-        f_config[k] = configboss.get_bool(v[0])
+        f_config[k] = (configboss.get_bool(v[0]), v[1])
     else:
-        f_config[k] = v[0]
+        f_config[k] = (v[0], v[1])
 
 API = f_config['api']
 CALLBACK_PLUGIN = f_config['callback_plugin']
@@ -61,7 +61,7 @@ display = Display(CALLBACK_PLUGIN)
 
 def config_dump(args):
     """Dump configuration"""
-    for k, v in configboss.config_data['client'].items():
+    for k, v in f_config.items():
         if args.sources:
             display.print("({2})    {0}={1}".format(k, v[0], v[1]))
         else:
