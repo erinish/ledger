@@ -40,7 +40,7 @@ class ConfigBoss():
                     print(stain.RED + "[Error]" + stain.RESET + ": {} is an invalid section.".format(exc))
 
         # Return the parser because ConfigParser object actually contains the config data
-        return self._parser
+        return self._tmp_config
     
     @staticmethod
     def get_bool(val):
