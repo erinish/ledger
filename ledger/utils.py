@@ -22,16 +22,38 @@ class ConfigBoss():
     def _parse_config_file(self):
 
         self._parser = configparser.ConfigParser()
-        # Not checking if exists because ConfigParser handles this gracefully
+        self._tmp_config = {}
+        self._tmp_config['client'] = {}
+        self._tmp_config['server'] = {}
         # Standard allowing for hierarchal config overrides
         for item in self._config_files:
             if item:
                 try:
                     self._parser.read(item)
+                    for section in self._parser.sections():
+                        for k, v in self._parser[section].items():
+                            self._tmp_config[section][k] = (v, item.name)
+
                 except MissingSectionHeaderError as exc:
                     print(stain.YELLOW + "[Warning]" + stain.RESET + ": {} is an invalid config file. line: {}, {}".format(exc.filename.name, exc.lineno, exc.line))
+                except KeyError as exc:
+                    print(stain.RED + "[Error]" + stain.RESET + ": {} is an invalid section.".format(exc))
+
         # Return the parser because ConfigParser object actually contains the config data
         return self._parser
+    
+    @staticmethod
+    def get_bool(val):
+        val = str(val).lower()
+        truth = ['yes', 'true', 'on', '1']
+        falseness = ['no', 'false', 'off', '0']
+
+        if val in truth:
+            return True
+        elif val in falseness:
+            return False
+        else:
+            raise ValueError("Expected boolean value, got {}".format(val))
 
 
 def check_id(api, taskid):

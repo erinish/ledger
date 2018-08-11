@@ -16,22 +16,11 @@ configboss = ConfigBoss()
 stain = Stain()
 f_config = {}
 
-DEFAULT_CONFIG = {"api": "http://localhost:9000",
-                  "callback_plugin": "yaml",
-                  "debug": False
-                  }
-
-if 'client' in configboss.config_data.sections():
-    for k, v in DEFAULT_CONFIG.items():
-        if k in configboss.config_data['client']:
-            if k == 'debug':
-                f_config[k] = configboss.config_data['client'].getboolean(k)
-            else:
-                f_config[k] = v
-        else:
-            f_config[k] = DEFAULT_CONFIG[k]
-else:
-    f_config = DEFAULT_CONFIG
+for k, v in configboss.config_data:
+    if k == 'debug':
+        f_config[k] = configboss.get_bool(v[0])
+    else:
+        f_config[k] = v[0]
 
 API = f_config['api']
 CALLBACK_PLUGIN = f_config['callback_plugin']
@@ -73,7 +62,10 @@ display = Display(CALLBACK_PLUGIN)
 def config_dump(args):
     """Dump configuration"""
     for k, v in f_config.items():
-        display.print("{0}={1}".format(k, v))
+        if args.sources:
+            display.print("{0}={1}    {}".format(k, v[0], v[1]))
+        else:
+            display.print("{0}={1}".format(k, v[0]))
 
 
 def report_tasks(args):
@@ -182,6 +174,7 @@ def main():
 
     # Conf Parser
     conf_parser = subparsers.add_parser('config')
+    conf_parser.add_argument('-s', '--sources', action='store_true', help='show source file for each variable')
     conf_parser.set_defaults(func=config_dump)
 
     # LS Parser
