@@ -16,7 +16,7 @@ configboss = ConfigBoss()
 stain = Stain()
 f_config = {}
 
-for k, v in configboss.config_data:
+for k, v in configboss.config_data.items():
     if k == 'debug':
         f_config[k] = configboss.get_bool(v[0])
     else:
