@@ -61,7 +61,7 @@ display = Display(CALLBACK_PLUGIN)
 
 def config_dump(args):
     """Dump configuration"""
-    for k, v in f_config.items():
+    for k, v in configboss.config_data['client'].items():
         if args.sources:
             display.print("{0}={1}    {}".format(k, v[0], v[1]))
         else:
