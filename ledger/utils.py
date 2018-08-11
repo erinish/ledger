@@ -11,8 +11,7 @@ stain = Stain()
 class ConfigBoss():
 
     def __init__(self, config_file=None):
-        try:
-            self._config_file = Path(config_file)
+        self._config_file = Path(config_file)
         self._user_home_conf = Path.home() / '.ledger' / 'ledger.conf'
         self._system_default_conf = Path('/etc/ledger/ledger.conf')
         self._package_default_conf = Path('ledger.conf')
