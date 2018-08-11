@@ -33,29 +33,6 @@ if 'client' in configboss.config_data.sections():
 else:
     f_config = DEFAULT_CONFIG
 
-<<<<<<< HEAD
-configboss = ConfigBoss()
-f_config = {}
-
-DEFAULT_CONFIG = { "api": "http://localhost:9000",
-                   "callback_plugin": "yaml",
-                   "debug": False
-}
-
-if 'client' in configboss.config_data.sections():
-    for k, v in DEFAULT_CONFIG.items():
-        if k in configboss.config_data['client']:
-            if k == 'debug':
-                f_config[k] = configboss.config_data['client'].getboolean(k)
-            else:
-                f_config[k] = v
-        else:
-            f_config[k] = DEFAULT_CONFIG[k]
-else:
-    f_config = DEFAULT_CONFIG
-
-=======
->>>>>>> 00d5ab98984379eb898ed182ee770e543701345a
 API = f_config['api']
 CALLBACK_PLUGIN = f_config['callback_plugin']
 
@@ -93,12 +70,7 @@ class Display():
 display = Display(CALLBACK_PLUGIN)
 
 
-<<<<<<< HEAD
-@cli.command(name='config')
-def config_dump():
-=======
 def config_dump(args):
->>>>>>> 00d5ab98984379eb898ed182ee770e543701345a
     """Dump configuration"""
     for k, v in f_config.items():
         display.print("{0}={1}".format(k, v))
@@ -127,28 +99,17 @@ def list_task(args):
     filterkwargs = {}
     if args.days and not args.closed:
         filterkwargs['days'] = arrow.now().timestamp - (int(days) * 86400)
-<<<<<<< HEAD
-    if status and not zefault:
-        filterkwargs['status'] = status
-    if zefault:
-        filterkwargs['status'] = 'open'
-=======
     elif args.days:
         filterkwargs['close_time'] = arrow.now().timestamp - (int(days) * 86400)
 
     if args.closed:
         filterkwargs['status'] = 'closed'
 
->>>>>>> 00d5ab98984379eb898ed182ee770e543701345a
     try:
         mytasks = req.get("{}/task".format(API)).json()
     except req.exceptions.ConnectionError as exc:
         display.print("Error: could not connect to server. Is it running?")
         sys.exit(1)
-<<<<<<< HEAD
-    tasksbytime = sorted(mytasks.items(), key=lambda x: x[1]['time'], reverse=True)
-    print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
-=======
 
     # On specific runs for closed tasks, reverse sort by time closed
     # but if open tasks or all tasks, sort by time opened
@@ -159,7 +120,6 @@ def list_task(args):
 
     # Print the header
     display.print("{} {:>10} {:>16} {}".format(*['ID', 'TIME', 'STATUS', 'TASK']))
->>>>>>> 00d5ab98984379eb898ed182ee770e543701345a
     for entry in tasksbytime:
         if filter_tasks(entry[1], **filterkwargs):
             # FIXME: overwriting a builtin
