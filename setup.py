@@ -80,7 +80,6 @@ class UploadCommand(Command):
         self.status('Pushing git tags…')
         os.system('git tag v{0}'.format(about['__version__']))
         os.system('git push --tags')
-        
         sys.exit()
 
 
@@ -96,7 +95,7 @@ setup(
     url=URL,
     packages=find_packages('ledger', exclude=('tests',)),
     entry_points={
-        'console_scripts': ['ledger=ledger.client:cli'],
+        'console_scripts': ['ledger=ledger.client:main'],
     },
     install_requires=REQUIRED,
     extras_require=EXTRAS,

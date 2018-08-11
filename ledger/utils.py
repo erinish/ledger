@@ -1,8 +1,15 @@
 import re
 import requests as req
 import configparser
+from configparser import MissingSectionHeaderError
 from pathlib import Path
+from stain import Stain
 
+<<<<<<< HEAD
+=======
+stain = Stain()
+
+>>>>>>> 00d5ab98984379eb898ed182ee770e543701345a
 
 class ConfigBoss():
 
@@ -14,7 +21,10 @@ class ConfigBoss():
         self._config_files = [self._package_default_conf, self._system_default_conf, self._user_home_conf, self._config_file]
 
         self.config_data = self._parse_config_file()
+<<<<<<< HEAD
     
+=======
+>>>>>>> 00d5ab98984379eb898ed182ee770e543701345a
 
     def _parse_config_file(self):
 
@@ -23,8 +33,16 @@ class ConfigBoss():
         # Standard allowing for hierarchal config overrides
         for item in self._config_files:
             if item:
+<<<<<<< HEAD
                 self._parser.read(item)
         # Return the parser because ConfigParser object actually contains the config data 
+=======
+                try:
+                    self._parser.read(item)
+                except MissingSectionHeaderError as exc:
+                    print(stain.YELLOW + "[Warning]" + stain.RESET + ": {} is an invalid config file. line: {}, {}".format(exc.filename.name, exc.lineno, exc.line))
+        # Return the parser because ConfigParser object actually contains the config data
+>>>>>>> 00d5ab98984379eb898ed182ee770e543701345a
         return self._parser
 
 
@@ -51,6 +69,8 @@ def filter_tasks(task, **kwargs):
         for key, value in kwargs.items():
             if key == 'days':
                 tests.append(int(task['time']) > value)
+            if key == 'close_time':
+                tests.append(int(task['close_time']) > value)
             if key == 'status':
                 tests.append(task['status'] == value)
     return all(tests)
