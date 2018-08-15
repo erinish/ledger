@@ -22,7 +22,7 @@ for k, v in configboss.config_data['client'].items():
     else:
         f_config[k] = (v[0], v[1])
 
-API = f_config['api']
+API = f_config['api'][0]
 CALLBACK_PLUGIN = f_config['callback_plugin']
 
 if CALLBACK_PLUGIN == 'yaml':
@@ -157,6 +157,7 @@ def del_task(args):
 def close_task(args):
     """close a task with an optional comment"""
     headers = {"Content-Type": "application/json"}
+    print(args.hash)
     uri = check_id(API, args.hash)
     if uri:
         stamp = int(arrow.now().timestamp)
@@ -181,7 +182,7 @@ def main():
     ls_parser = subparsers.add_parser('ls', help='list tasks')
     ls_parser.add_argument('-c', '--closed', action='store_true', help='show only closed tasks')
     ls_parser.add_argument('-l', '--long', action='store_true', help="don't shorten hashes")
-    ls_parser.add_argument('-d', '--days', nargs=1, type=int, help='limit result to last N days')
+    ls_parser.add_argument('-d', '--days', type=int, help='limit result to last N days')
     ls_parser.set_defaults(func=list_task)
 
     # Report Parser
@@ -198,12 +199,12 @@ def main():
 
     # RM Parser
     rm_parser = subparsers.add_parser('rm', help='remove a task (destructive)')
-    rm_parser.add_argument('hash', nargs=1, help='partial or full hash of the task')
+    rm_parser.add_argument('hash', help='partial or full hash of the task')
     rm_parser.set_defaults(func=del_task)
 
     # Close Parser
     close_parser = subparsers.add_parser('close', help='close a task')
-    close_parser.add_argument('hash', nargs=1, help='partial or full hash of the task')
+    close_parser.add_argument('hash', help='partial or full hash of the task')
     close_parser.set_defaults(func=close_task)
 
     args = parser.parse_args()
